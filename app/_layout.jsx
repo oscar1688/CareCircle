@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Text, View } from 'react-native'
+import { SplashScreen } from 'expo-router'
 import { useFonts } from 'expo-font'
+import { useEffect } from 'react'
 
 
+// Prevent splash screen from auto hiding before assets loading is complete
 SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
     // Function to load all of the fonts that the application will use.
