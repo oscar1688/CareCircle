@@ -1,12 +1,14 @@
 import { Text, View } from 'react-native'
-import { SplashScreen } from 'expo-router'
+import { SplashScreen, Stack } from 'expo-router'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
-
+import '../global.css'
+import GlobalProvider from '../context/GlobalProvider'
 
 // Prevent splash screen from auto hiding before assets loading is complete
 SplashScreen.preventAutoHideAsync();
-const RootLayout = () => {
+
+export default function RootLayout() {
     // Function to load all of the fonts that the application will use.
     // useEffect used to throw error if the fonts were not loaded correctly
     const [fontsLoaded, error] = useFonts({
@@ -19,24 +21,29 @@ const RootLayout = () => {
         "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
         "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
         "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
-      });
-      useEffect(() => {
+    })
+
+    useEffect(() => {
         if (error) throw error;
-      
+    }, [error])
+
+    useEffect(() => {
         if (fontsLoaded) {
-          SplashScreen.hideAsync();
+            SplashScreen.hideAsync();
         }
-      }, [fontsLoaded, error]);
-      
-      if (!fontsLoaded && !error) {
+    }, [fontsLoaded])
+
+    if (!fontsLoaded) {
         return null;
-      }
+    }
 
-  return (
-    <View>
-      <Text>RootLayout</Text>
-    </View>
-  )
+    return (
+        <GlobalProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+        </GlobalProvider>
+    )
 }
-
-export default RootLayout

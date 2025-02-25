@@ -12,6 +12,12 @@ import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
 
+{/* below are icon imports for CareCircle */}
+import todo from "../assets/icons/todo.png";
+import daily from "../assets/icons/daily.png";
+import location from "../assets/icons/location.png";
+import googleIcon from "../assets/icons/google-icon.png";
+
 export default {
   play,
   bookmark,
@@ -26,4 +32,8 @@ export default {
   logout,
   eyeHide,
   eye,
+  todo,
+  daily,
+  location,
+  googleIcon
 };

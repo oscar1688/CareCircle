@@ -5,10 +5,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#161622",
+        primary: "#471AA0",
         secondary: {
-          DEFAULT: "#FF9C01",
-          100: "#FF9001",
+          DEFAULT: "#BB84E8",
+          100: "#BB84E8",
           200: "#FF8E01",
         },
         black: {
@@ -17,8 +17,14 @@ module.exports = {
           200: "#232533",
         },
         gray: {
-          100: "#CDCDE0",
+          100: "#2E2E2E",
         },
+        carecircle: {
+          purple: {
+            light: "#BB84E8",
+            dark: "#471AA0",
+          }
+        }
       },
       fontFamily: {
         pthin: ["Poppins-Thin", "sans-serif"],
