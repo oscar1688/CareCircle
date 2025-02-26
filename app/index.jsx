@@ -33,7 +33,7 @@ export default function Index() {
         {/* Continue Button */}
         <CustomButton
           title="Continue"
-          handlePress={() => router.push('/sign-in')}
+          handlePress={() => router.push('/home')}
           containerStyles="mt-7 w-full"
         />
 
