@@ -61,45 +61,30 @@ const TabsLayout = () => {
                 }}
             />
             <Tabs.Screen
-                name="todo"
+                name="calendars"
                 options={{
-                    title: 'Todo',
+                    title: 'Calendars',
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon 
-                            icon={icons.todo}
+                            icon={icons.calendars}
                             color={color}
-                            name="Todo"
+                            name="Calendars"
                             focused={focused}
                         />
                     )
                 }}
             />
             <Tabs.Screen
-                name="daily"
+                name="profile"
                 options={{
-                    title: 'Daily',
+                    title: 'Profile',
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon 
-                            icon={icons.daily}
+                            icon={icons.profile}
                             color={color}
-                            name="Daily"
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
-            <Tabs.Screen
-                name="location"
-                options={{
-                    title: 'Location',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon 
-                            icon={icons.location}
-                            color={color}
-                            name="Location"
+                            name="Profile"
                             focused={focused}
                         />
                     )

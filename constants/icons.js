@@ -18,6 +18,8 @@ import daily from "../assets/icons/daily.png";
 import location from "../assets/icons/location.png";
 import googleIcon from "../assets/icons/google-icon.png";
 
+import calendars from "../assets/icons/calendars.png";
+
 export default {
   play,
   bookmark,
@@ -35,5 +37,6 @@ export default {
   todo,
   daily,
   location,
-  googleIcon
+  googleIcon,
+  calendars
 };
