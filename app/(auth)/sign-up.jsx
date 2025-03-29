@@ -1,47 +1,41 @@
-import { View, Text, ScrollView, Image, Alert } from 'react-native'
-import { React, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Link, router } from 'expo-router';
+import { useState } from "react";
+import { Link, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
-import FormField from '../../components/FormField';
-import CustomButton from '../../components/CustomButton';
-import { createUser } from '../../lib/appwrite';
-import { useGlobalContext } from '../../context/GlobalProvider';
+import FormField from "../../components/FormField";
+import CustomButton from "../../components/CustomButton";
+import { createUser } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
-  const { setUser, setIsLoggedIn } = useGlobalContext();
-  const [form, setform] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  })
-  const [isSubmitting, setisSubmitting] = useState(false)
+  const { setUser, setIsLogged } = useGlobalContext();
 
-  {/* function that submits the form information when the submit button is clicked. */}
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const submit = async () => {
-    if(!form.username || !form.email || !form.password || !form.confirmPassword){
-      Alert.alert('Error', 'Please fill in all the fields')
+    if (form.username === "" || form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
     }
 
-    if(form.password !== form.confirmPassword){
-      Alert.alert('Error', 'Passwords do not match')
-    }
-
-    setisSubmitting(true);
-
-    try{
-      const result = await createUser(form.email, form.password, form.username)
+    setSubmitting(true);
+    try {
+      const result = await createUser(form.email, form.password, form.username);
       setUser(result);
-      setIsLoggedIn(true);
+      setIsLogged(true);
 
-      router.replace('/home')
+      router.replace("/home");
     } catch (error) {
-      Alert.alert('Error', error.message)
+      Alert.alert("Error", error.message);
     } finally {
-      setisSubmitting(false);
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -62,14 +56,14 @@ const SignUp = () => {
           <FormField 
             title="Full Name"
             value={form.username}
-            handleChangeText={(e) => setform({...form, username: e})}
+            handleChangeText={(e) => setForm({...form, username: e})}
             otherStyles="mb-4"
           />
           
           <FormField 
             title="Email"
             value={form.email}
-            handleChangeText={(e) => setform({...form, email: e})}
+            handleChangeText={(e) => setForm({...form, email: e})}
             otherStyles="mb-4"
             keyboradType="email-address"
           />
@@ -77,7 +71,7 @@ const SignUp = () => {
           <FormField 
             title="Password"
             value={form.password}
-            handleChangeText={(e) => setform({...form, password: e})}
+            handleChangeText={(e) => setForm({...form, password: e})}
             otherStyles="mb-4"
             secureTextEntry
           />
@@ -85,7 +79,7 @@ const SignUp = () => {
           <CustomButton 
             title="Sign Up"
             handlePress={submit}
-            containerStyles="bg-[#6A2FEE] rounded-xl py-4"
+            containerStyles="bg-carecircle-purple rounded-xl py-4"
             isLoading={isSubmitting}
           />
 
@@ -101,6 +95,6 @@ const SignUp = () => {
       <View className="absolute bottom-0 left-0 w-[150px] h-[150px] bg-carecircle-purple-dark rounded-tr-full" />
     </SafeAreaView>
   )
-}
+};
 
-export default SignUp
+export default SignUp;

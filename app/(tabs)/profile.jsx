@@ -1,8 +1,19 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
-import { Stack, useRouter } from 'expo-router'
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
+import { signOut } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const Profile = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const { user, setUser, setIsLogged } = useGlobalContext();
+
+  const logout = async () => {
+    await signOut();
+    setUser(null);
+    setIsLogged(false);
+
+    router.replace("/sign-in");
+  };
 
   return (
     <View className="flex-1 bg-white">
@@ -49,8 +60,21 @@ const Profile = () => {
         />
         <Text className="text-base text-gray-800">Setting</Text>
       </TouchableOpacity>
-    </View>
-  )
-}
 
-export default Profile
+      {/* Sign Out Button */}
+      <TouchableOpacity 
+        className="flex-row items-center p-4 border-b border-gray-200"
+        onPress={logout}
+      >
+        <Image
+          source={require('../../assets/icons/logout.png')}
+          className="w-6 h-6 mr-3 tint-[#4C6444]"
+          resizeMode="contain"
+        />
+        <Text className="text-base text-gray-800">Sign Out</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default Profile;

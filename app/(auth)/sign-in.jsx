@@ -1,41 +1,42 @@
-import { View, Text, ScrollView, Image, Alert, TouchableOpacity } from 'react-native'
-import { React, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Link, router } from 'expo-router';
+import { useState } from "react";
+import { Link, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
-import FormField from '../../components/FormField';
-import CustomButton from '../../components/CustomButton';
-import { signIn, getCurrentUser } from '../../lib/appwrite';
-import { useGlobalContext } from '../../context/GlobalProvider';
+import FormField from "../../components/FormField";
+import CustomButton from "../../components/CustomButton";
+import { getCurrentUser, signIn } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
-  const { setUser, setIsLoggedIn } = useGlobalContext();
-  const [form, setform] = useState({
-    email: '',
-    password: ''
-  })
-  const [isSubmitting, setisSubmitting] = useState(false)
+  const { setUser, setIsLogged } = useGlobalContext();
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
   const submit = async () => {
-    if(!form.email || !form.password){
-      Alert.alert('Error', 'Please fill in all the fields')
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
     }
 
-    setisSubmitting(true);
+    setSubmitting(true);
 
-    try{
-      await signIn(form.email, form.password)
+    try {
+      await signIn(form.email, form.password);
       const result = await getCurrentUser();
       setUser(result);
-      setIsLoggedIn(true);
+      setIsLogged(true);
 
-      router.replace('/home')
+      Alert.alert("Success", "User signed in successfully");
+      router.replace("/home");
     } catch (error) {
-      Alert.alert('Error', error.message)
+      Alert.alert("Error", error.message);
     } finally {
-      setisSubmitting(false);
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -67,7 +68,7 @@ const SignIn = () => {
           <FormField 
             title="Email or User Name"
             value={form.email}
-            handleChangeText={(e) => setform({...form, email: e})}
+            handleChangeText={(e) => setForm({...form, email: e})}
             otherStyles="mb-4"
             keyboradType="email-address"
           />
@@ -75,14 +76,10 @@ const SignIn = () => {
           <FormField 
             title="Password"
             value={form.password}
-            handleChangeText={(e) => setform({...form, password: e})}
+            handleChangeText={(e) => setForm({...form, password: e})}
             otherStyles="mb-2"
             secureTextEntry
           />
-
-          <TouchableOpacity className="self-end mb-6">
-            <Text className="text-carecircle-purple font-medium">Forget Password ?</Text>
-          </TouchableOpacity>
 
           <CustomButton 
             title="Sign in"
@@ -90,18 +87,6 @@ const SignIn = () => {
             containerStyles="bg-carecircle-purple rounded-xl py-4"
             isLoading={isSubmitting}
           />
-
-          <View className="items-center mt-8">
-            <Text className="text-gray-600 mb-8">Or sign in With</Text>
-            
-            <TouchableOpacity className="w-12 h-12 bg-white rounded-full shadow-md items-center justify-center">
-              <Image
-                source={require('../../assets/icons/google-icon.png')}
-                className="w-8 h-8"
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
 
           <View className="flex-row justify-center mt-8">
             <Text className="text-gray-600">Don't have account ? </Text>
@@ -115,6 +100,6 @@ const SignIn = () => {
       <View className="absolute bottom-0 left-0 w-[100px] h-[100px] bg-carecircle-purple-dark rounded-tr-full" />
     </SafeAreaView>
   )
-}
+};
 
-export default SignIn
+export default SignIn;

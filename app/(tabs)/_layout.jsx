@@ -28,71 +28,69 @@ const TabIcon = ({ icon, color, name, focused }) => {
     )
 }
 
-const TabsLayout = () => {
+function TabsLayout() {
   return (
-    <>
-        <Tabs
-            screenOptions={{
-                tabBarShowLabel: false,
-                tabBarActiveTintColor: '#4C6444',
-                tabBarInactiveTintColor: '#8A6240',
-                tabBarStyle:{
-                    backgroundColor: '#CABA9C',
-                    borderTopWidth: 1,
-                    borderTopColor: '#CABA9C',
-                    height: 64,
-                    paddingTop: 12,
-                }
-            }}
-        >
-            <Tabs.Screen
-                name="home"
-                options={{
-                    title: 'Home',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon 
-                            icon={icons.home}
-                            color={color}
-                            name="Home"
-                            focused={focused}
-                        />
-                    )
-                }}
+    <Tabs
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#4C6444',
+        tabBarInactiveTintColor: '#8A6240',
+        tabBarStyle:{
+          backgroundColor: '#CABA9C',
+          borderTopWidth: 1,
+          borderTopColor: '#CABA9C',
+          height: 64,
+          paddingTop: 12,
+        }
+      }}
+    >
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: 'Home',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.home}
+              color={color}
+              name="Home"
+              focused={focused}
             />
-            <Tabs.Screen
-                name="calendars"
-                options={{
-                    title: 'Calendars',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon 
-                            icon={icons.calendars}
-                            color={color}
-                            name="Calendars"
-                            focused={focused}
-                        />
-                    )
-                }}
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="calendars"
+        options={{
+          title: 'Calendars',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.calendars}
+              color={color}
+              name="Calendars"
+              focused={focused}
             />
-            <Tabs.Screen
-                name="profile"
-                options={{
-                    title: 'Profile',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon 
-                            icon={icons.profile}
-                            color={color}
-                            name="Profile"
-                            focused={focused}
-                        />
-                    )
-                }}
+          )
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.profile}
+              color={color}
+              name="Profile"
+              focused={focused}
             />
-        </Tabs>
-    </>
-  )
+          )
+        }}
+      />
+    </Tabs>
+  );
 }
 
-export default TabsLayout
+export default TabsLayout;

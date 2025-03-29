@@ -1,20 +1,24 @@
 {
   "expo": {
     "name": "CareCircle",
-    "slug": "CareCircle",
-    "scheme": "carecircle",
+    "slug": "carecircle",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "carecircle",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jsm.carecircle"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +33,15 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7f6250c8-7a5b-490c-b8a9-7d98082b66ac"
+      }
+    },
+    "owner": "oscar1688"
   }
 }
