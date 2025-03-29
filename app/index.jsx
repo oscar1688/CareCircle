@@ -1,9 +1,33 @@
 import { Text, View, Pressable, Image } from 'react-native';
-import { Link, router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../components/CustomButton';
+import { getCurrentUser } from '../lib/appwrite';
+import { useGlobalContext } from '../context/GlobalProvider';
 
 export default function Index() {
+  const { loading, isLogged } = useGlobalContext();
+
+  if (!loading && isLogged) return <Redirect href="/home" />;
+
+  const handleContinue = async () => {
+    try {
+      const currentUser = await getCurrentUser();
+      console.log("currentUser: " + currentUser);
+      console.log("isLogged:" + isLogged);
+      if (currentUser) {
+        setUser(currentUser);
+        setIsLogged(true);
+        router.replace('/home');
+      } else {
+        router.push('/sign-in');
+      }
+    } catch (error) {
+      console.log("No active session");
+      router.push('/sign-in');
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 p-5 justify-center items-center relative">
@@ -33,7 +57,14 @@ export default function Index() {
         {/* Continue Button */}
         <CustomButton
           title="Continue"
-          handlePress={() => router.push('/sign-in')}
+          handlePress={handleContinue}
+          containerStyles="mt-7 w-full"
+        />
+
+        {/* temporary bypass auth button */}
+        <CustomButton
+          title="Bypass"
+          handlePress={() => router.replace('/home')}
           containerStyles="mt-7 w-full"
         />
 

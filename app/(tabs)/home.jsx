@@ -1,6 +1,7 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Stack } from 'expo-router'
+import LocationChecker from '../../components/LocationChecker'
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date())
@@ -88,10 +89,17 @@ const Home = () => {
                     resizeMode="contain"
                   />
                 </View>
+
                 <View>
                   <Text className="text-white font-bold text-base">User_Name</Text>
                   <Text className="text-white text-sm">Event Name</Text>
                   <Text className="text-gray-200 text-xs">Location</Text>
+{/* Location TESTING */}
+                  <LocationChecker 
+                    address="1600 Amphitheatre Parkway, Mountain View, CA" 
+                    radius={500} 
+                  />
+
                 </View>
               </View>
               <Text className="text-white text-xs">11:36</Text>

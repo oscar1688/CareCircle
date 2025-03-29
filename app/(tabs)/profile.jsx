@@ -47,8 +47,8 @@ const Profile = () => {
         </View>
 
         {/* User Info */}
-        <Text className="text-2xl font-bold text-gray-800 mb-2">User_Name</Text>
-        <Text className="text-base text-gray-600">email@gmail.com</Text>
+        {/* <Text className="text-2xl font-bold text-gray-800 mb-2">{user.name}</Text>
+        <Text className="text-base text-gray-600">{user.email}</Text> */}
       </View>
 
       {/* Settings Button */}
