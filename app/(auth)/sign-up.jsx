@@ -73,7 +73,7 @@ const SignUp = () => {
           <Text className="text-carecircle-purple text-3xl font-bold mb-8">Sign Up</Text>
 
           <FormField 
-            title="Full Name"
+            title="Username"
             value={form.username}
             handleChangeText={(e) => setForm({...form, username: e})}
             otherStyles="mb-4"
@@ -92,7 +92,6 @@ const SignUp = () => {
             value={form.password}
             handleChangeText={(e) => setForm({...form, password: e})}
             otherStyles="mb-4"
-            secureTextEntry
           />
 
           <CustomButton 

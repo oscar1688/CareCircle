@@ -73,6 +73,15 @@ const Profile = () => {
         />
         <Text className="text-base text-gray-800">Sign Out</Text>
       </TouchableOpacity>
+      {/*Temporary return to landingpage button*/}
+      {/* <TouchableOpacity
+        className="flex-row items-center p-4 border-b border-gray-200"
+        onPress={() => router.replace("index")}
+        >
+          <Text className="text-base text-gray-800">
+            Return to Landing Page
+          </Text>
+        </TouchableOpacity> */}
     </View>
   );
 };

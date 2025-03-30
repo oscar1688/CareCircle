@@ -62,11 +62,11 @@ export default function Index() {
         />
 
         {/* temporary bypass auth button */}
-        <CustomButton
+        {/* <CustomButton
           title="Bypass"
           handlePress={() => router.replace('/home')}
           containerStyles="mt-7 w-full"
-        />
+        /> */}
 
         {/* Bottom curved shapes */}
         <View className="absolute bottom-0 right-0 w-[200px] h-[200px] bg-carecircle-purple-light rounded-tl-full" />
