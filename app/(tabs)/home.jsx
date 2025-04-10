@@ -4,12 +4,17 @@ import { Stack } from 'expo-router'
 import LocationChecker from '../../components/LocationChecker'
 import { useGlobalContext } from '../../context/GlobalProvider';
 
+import { getLocation } from '../../lib/getLocation';
+
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date())
 
+
+
+  // Example of using useGlobalContext and useEffect to handle user data
+  const { location, address, errorMsg } = getLocation();
   // 1. Get both user data and loading state
   const { user, loading, refreshUser } = useGlobalContext();
-
   // 2. Use useEffect to handle cases where user data might be missing
   useEffect(() => {
     if (!loading && !user) {
@@ -17,7 +22,6 @@ const Home = () => {
       refreshUser();
     }
   }, [user, loading]);
-
   // 3. Create helper function to safely access user data
   const getUserDisplay = () => {
     try {
@@ -32,7 +36,6 @@ const Home = () => {
       return { email: 'Error loading data', username: 'Error loading data' };
     }
   };
-
   // 4. Handle loading state first
   if (loading) {
     return (
@@ -41,7 +44,6 @@ const Home = () => {
       </View>
     );
   }
-
   // 5. Handle case where user isn't logged in
   if (!user) {
     return (
@@ -50,9 +52,10 @@ const Home = () => {
       </View>
     );
   }
-
   // 6. Get user display data safely
   const { email, username } = getUserDisplay();
+
+
 
   // Generate array of dates for the date selector
   const getDates = () => {
@@ -85,6 +88,20 @@ const Home = () => {
     <View className="flex-1 bg-white p-4">
       <Stack.Screen options={{ headerShown: false }} />
       
+      {/* Example Displaying Current Location Coordinates and User Data */}
+      <View>
+      {location ? (
+        <Text>Lat: {location.latitude}, Lng: {location.longitude}</Text>
+      ) : (
+        <Text>{errorMsg || "Fetching location..."}</Text>
+      )}
+
+      {address && (
+        <Text>
+          {address.name}, {address.street}, {address.city}, {address.region}
+        </Text>
+      )}
+    </View>
       {/* 7. Display user data with proper error boundaries */}
       <View>
         <Text className="text-2xl font-bold mb-2">
@@ -97,6 +114,7 @@ const Home = () => {
           Username: {username}
         </Text>
       </View>
+
 
       {/* Calendar Name */}
       <Text className="text-2xl font-bold text-center py-4 text-[#4C6444] mt-4">Calendar_Name</Text>
