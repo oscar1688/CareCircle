@@ -43,9 +43,8 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      await signIn(form.email, form.password);
-      const result = await getCurrentUser();
-      setUser(result);
+      const userData = await signIn(form.email, form.password);
+      setUser(userData);
       setIsLogged(true);
 
       Alert.alert("Success", "User signed in successfully");

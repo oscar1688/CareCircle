@@ -1,11 +1,59 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { Stack } from 'expo-router'
 import LocationChecker from '../../components/LocationChecker'
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date())
-  
+
+  // 1. Get both user data and loading state
+  const { user, loading, refreshUser } = useGlobalContext();
+
+  // 2. Use useEffect to handle cases where user data might be missing
+  useEffect(() => {
+    if (!loading && !user) {
+      console.log("No user data in home, attempting refresh...");
+      refreshUser();
+    }
+  }, [user, loading]);
+
+  // 3. Create helper function to safely access user data
+  const getUserDisplay = () => {
+    try {
+      // Use optional chaining to safely access properties
+      return {
+        email: user?.email || 'No email available',
+        username: user?.username || 'No username available',
+        // Add fallback for any other user properties you need
+      };
+    } catch (error) {
+      console.error("Error accessing user data:", error);
+      return { email: 'Error loading data', username: 'Error loading data' };
+    }
+  };
+
+  // 4. Handle loading state first
+  if (loading) {
+    return (
+      <View className="flex-1 bg-white p-4 justify-center items-center">
+        <Text className="text-lg">Loading...</Text>
+      </View>
+    );
+  }
+
+  // 5. Handle case where user isn't logged in
+  if (!user) {
+    return (
+      <View className="flex-1 bg-white p-4 justify-center items-center">
+        <Text className="text-lg">Please sign in to view this page</Text>
+      </View>
+    );
+  }
+
+  // 6. Get user display data safely
+  const { email, username } = getUserDisplay();
+
   // Generate array of dates for the date selector
   const getDates = () => {
     const dates = []
@@ -34,11 +82,24 @@ const Home = () => {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white p-4">
       <Stack.Screen options={{ headerShown: false }} />
       
+      {/* 7. Display user data with proper error boundaries */}
+      <View>
+        <Text className="text-2xl font-bold mb-2">
+          Welcome back!
+        </Text>
+        <Text className="text-base text-gray-600">
+          Signed in as: {email}
+        </Text>
+        <Text className="text-base text-gray-600 mt-2">
+          Username: {username}
+        </Text>
+      </View>
+
       {/* Calendar Name */}
-      <Text className="text-2xl font-bold text-center py-4 text-[#4C6444]">Calendar_Name</Text>
+      <Text className="text-2xl font-bold text-center py-4 text-[#4C6444] mt-4">Calendar_Name</Text>
 
       {/* Date Selector */}
       <View className="border-t border-b border-gray-200 py-2">
@@ -94,12 +155,10 @@ const Home = () => {
                   <Text className="text-white font-bold text-base">User_Name</Text>
                   <Text className="text-white text-sm">Event Name</Text>
                   <Text className="text-gray-200 text-xs">Location</Text>
-{/* Location TESTING */}
                   <LocationChecker 
                     address="1600 Amphitheatre Parkway, Mountain View, CA" 
                     radius={500} 
                   />
-
                 </View>
               </View>
               <Text className="text-white text-xs">11:36</Text>

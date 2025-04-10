@@ -2,17 +2,32 @@ import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { signOut } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { useEffect } from 'react';
 
 const Profile = () => {
   const router = useRouter();
-  const { user, setUser, setIsLogged } = useGlobalContext();
+  const { user, setUser, setIsLogged, loading, refreshUser } = useGlobalContext();
+
+  // Add debugging useEffect
+  useEffect(() => {
+    console.log("Profile component - Current user state:", user);
+    if (!user && !loading) {
+      console.log("No user data found, attempting refresh...");
+      refreshUser();
+    }
+  }, [user, loading]);
 
   const logout = async () => {
-    await signOut();
-    setUser(null);
-    setIsLogged(false);
-
-    router.replace("/sign-in");
+    try {
+      await signOut();
+      // Only after successful signout, update the state
+      setUser(null);
+      setIsLogged(false);
+      router.replace("/sign-in");
+    } catch (error) {
+      console.error("Logout error:", error);
+      Alert.alert("Error", "Failed to sign out. Please try again.");
+    }
   };
 
   return (
@@ -47,8 +62,23 @@ const Profile = () => {
         </View>
 
         {/* User Info */}
-        {/* <Text className="text-2xl font-bold text-gray-800 mb-2">{user.name}</Text>
-        <Text className="text-base text-gray-600">{user.email}</Text> */}
+        {loading ? (
+          <Text className="text-base text-gray-600">Loading...</Text>
+        ) : user ? (
+          <>
+            <Text className="text-2xl font-bold text-gray-800 mb-2">
+              {user.username || 'No username'}
+            </Text>
+            <Text className="text-base text-gray-600">
+              {user.email || 'No email'}
+            </Text>
+            <Text className="text-xs text-gray-400 mt-1">
+              ID: {user.$id || 'No ID'}
+            </Text>
+          </>
+        ) : (
+          <Text className="text-base text-gray-600">No user data available</Text>
+        )}
       </View>
 
       {/* Settings Button */}
