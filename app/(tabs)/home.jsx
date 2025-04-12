@@ -1,7 +1,8 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { Stack } from 'expo-router'
-import LocationChecker from '../../components/LocationChecker'
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Stack } from 'expo-router';
+import LocationChecker from '../../components/LocationChecker';
+import LocationCoord from '../../components/LocationCoord';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { getLocation } from '../../lib/getLocation';
 
@@ -85,6 +86,9 @@ const Home = () => {
           }
       },[]) //get from DB
 
+
+  const exampleAddress = '675 Avenue Z, New York, NY';
+  const exampleCoordinates = { latitude: 40.586549, longitude: -73.969033 };
   return (
     <View className="flex-1 bg-white p-4">
       <Stack.Screen options={{ headerShown: false }} />
@@ -115,7 +119,7 @@ const Home = () => {
           Username: {username}
         </Text>
       </View> */}
-
+      <LocationCoord address={exampleAddress} coordinates={exampleCoordinates} />
       <Calendar user={currentUser} isUser={true}/>
     </View>
   )
