@@ -633,7 +633,7 @@ const Calendar = (props) => {
                                 </Text> 
                                  {props.event.location ? 
                                     <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} 
-                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[0]}}/>}</> :
+                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[1]}}/>}</> :
                                     <></>
                                  }
                             </View>                            
@@ -668,7 +668,7 @@ const Calendar = (props) => {
                                 <Text className="text-xl font-bold mx-4 text-black">{props.event.title}</Text> 
                                 {props.event.location ? 
                                     <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} 
-                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[0]}}/>}</> :
+                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[1]}}/>}</> :
                                     <></>
                                  }
                             </View>    

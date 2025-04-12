@@ -14,7 +14,7 @@ const Circle = ({ isInsideRadius }) => {
   );
 };
 
-const LocationCoord = ({name, address, coordinates, radius = DEFAULT_RADIUS }) => {
+const LocationCoord = ({address, coordinates, radius = DEFAULT_RADIUS }) => {
   const [isInsideRadius, setIsInsideRadius] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -42,7 +42,7 @@ const LocationCoord = ({name, address, coordinates, radius = DEFAULT_RADIUS }) =
         const userCoords = {
           latitude: coordinates.latitude,
           longitude: coordinates.longitude
-        };
+        };        
 
         const distance = getDistance(userCoords, addressCoords);
         console.log(`Distance from address: ${distance} meters`);

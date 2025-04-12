@@ -36,7 +36,7 @@ const Home = () => {
   useEffect(()=>{
     try{
       getUserEmail(user.email).then(user => updateUser({
-        id: "67f98d8a2ca46ac19bbb06b0",
+        id: user._id,
         currentLocation: [location.latitude, location.longitude]
       })).catch((error) => console.error('Error fetching events:', error)) 
     }catch(e){

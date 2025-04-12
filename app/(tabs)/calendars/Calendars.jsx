@@ -22,7 +22,6 @@ const Calendars = () => {
     
       useEffect(()=>{
         try{
-          console.log("1",user)
           getUserEmail(user.email).then(user => setCurrentUser({
             id: user._id,
             username: user.username,
