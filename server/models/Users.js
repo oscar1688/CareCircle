@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
         require: true,
     },
     currentLocation: {
-        type: [Double],
+        type: [Number],
         require:false
     },
 })

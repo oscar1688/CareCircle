@@ -632,7 +632,8 @@ const Calendar = (props) => {
                                     {props.event.title}
                                 </Text> 
                                  {props.event.location ? 
-                                    <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} coordinates={{ latitude: 40.6947111, longitude: -73.8216889 }}/>}</> :
+                                    <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} 
+                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[0]}}/>}</> :
                                     <></>
                                  }
                             </View>                            
@@ -665,7 +666,11 @@ const Calendar = (props) => {
                         <View className="absolute flex border-0 h-5/6 justify-center w-full bottom-[50]">
                             <View className="flex-row border-0 my-2 items-center top-[5]"> 
                                 <Text className="text-xl font-bold mx-4 text-black">{props.event.title}</Text> 
-                                 {props.event.location ? <LocationChecker address={props.event.location}/> : <></>}
+                                {props.event.location ? 
+                                    <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} 
+                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[0]}}/>}</> :
+                                    <></>
+                                 }
                             </View>    
                            <Text className="text-sm mx-4 text-black">{convertTimeArraytoString(props.event.start,props.event.end)}</Text> 
                            <Text className="text-lg mx-4 text-blue-700">{props.event.location}</Text>
