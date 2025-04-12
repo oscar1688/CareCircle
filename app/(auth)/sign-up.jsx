@@ -7,6 +7,7 @@ import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { createUser, getCurrentUser } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { addUser } from "../../config";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -45,6 +46,9 @@ const SignUp = () => {
     setSubmitting(true);
     try {
       const result = await createUser(form.email, form.password, form.username);
+
+      //CREATE USER FOR MONGODB
+      addUser({email: form.email, password: form.password, username: form.username, currentLocation:''})
       
       setUser(result);
       setIsLogged(true);

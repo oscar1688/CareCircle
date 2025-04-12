@@ -1,4 +1,4 @@
-{/* Geolocation */}
+// LocationCoord.jsx
 import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import * as Location from 'expo-location';
@@ -14,22 +14,15 @@ const Circle = ({ isInsideRadius }) => {
   );
 };
 
-const LocationChecker = ({ address, radius = DEFAULT_RADIUS }) => {
+const LocationCoord = ({name, address, coordinates, radius = DEFAULT_RADIUS }) => {
   const [isInsideRadius, setIsInsideRadius] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
-    const checkUserLocation = async () => {
+    const checkLocationAgainstCoords = async () => {
       try {
-        if (!address) {
-          setErrorMsg('Address is required');
-          return;
-        }
-
-        // Request location permissions
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
+        if (!address || !coordinates) {
+          setErrorMsg('Address and coordinates are required');
           return;
         }
 
@@ -38,7 +31,6 @@ const LocationChecker = ({ address, radius = DEFAULT_RADIUS }) => {
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${GOOGLE_GEOCODING_API_KEY}`
         );
 
-        // Error if no response/empty response
         if (!geoResponse.data || !geoResponse.data.results || geoResponse.data.results.length === 0) {
           setErrorMsg('Address not found');
           return;
@@ -47,21 +39,14 @@ const LocationChecker = ({ address, radius = DEFAULT_RADIUS }) => {
         const { lat, lng } = geoResponse.data.results[0].geometry.location;
         const addressCoords = { latitude: lat, longitude: lng };
 
-        // Get user's current location
-        const location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.High
-        });
-
         const userCoords = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude
         };
 
-        // Calculate distance
         const distance = getDistance(userCoords, addressCoords);
         console.log(`Distance from address: ${distance} meters`);
 
-        // Update state based on radius
         setIsInsideRadius(distance <= radius);
         setErrorMsg(null);
       } catch (error) {
@@ -70,8 +55,8 @@ const LocationChecker = ({ address, radius = DEFAULT_RADIUS }) => {
       }
     };
 
-    checkUserLocation();
-  }, [address, radius]);
+    checkLocationAgainstCoords();
+  }, [address, coordinates, radius]);
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -79,7 +64,7 @@ const LocationChecker = ({ address, radius = DEFAULT_RADIUS }) => {
         <Text className="text-red-500 text-xs">{errorMsg}</Text>
       ) : (
         <>
-          <Text className="text-black text-xs">{isInsideRadius ? 'Near Location' : 'Away From Location'}</Text>
+          <Text className="text-white text-xs">{isInsideRadius ? 'Inside Radius' : 'Outside Radius'}</Text>
           <Circle isInsideRadius={isInsideRadius} />
         </>
       )}
@@ -87,4 +72,4 @@ const LocationChecker = ({ address, radius = DEFAULT_RADIUS }) => {
   );
 };
 
-export default LocationChecker;
+export default LocationCoord;
