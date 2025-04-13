@@ -256,60 +256,45 @@ const Calendar = (props) => {
                                     otherStyles ="w-[70px] mx-1"
                                 />                                
                             </View>
-                            <View className="flex-row">
+                            {/* Time */}
+                            <View className="flex-row justify-between items-start">
+                                {/* Start Time Group */}
+                                <View className="flex-col items-start">
+                                    <Text className="text-base font-medium text-gray-700 mb-0.5 ml-1">Start Time *</Text>
+                                    <View className="flex-row">
+                                        <FormField
+                                            value={form.startH}
+                                            handleChangeText={n => setForm({ ...form, startH: n })}
+                                            placeholder="HH"
+                                            otherStyles="w-[70px] mx-1"
+                                        />
+                                        <FormField
+                                            value={form.startm}
+                                            handleChangeText={n => setForm({ ...form, startm: n })}
+                                            placeholder="mm"
+                                            otherStyles="w-[70px] mx-1"
+                                        />
+                                    </View>
+                                </View>
 
-                                <FormField //dropDown
-                                    title = "          Start"
-                                    value={form.startH}
-                                    handleChangeText={n => setForm({...form, startH:n})}
-                                    placeholder='HH'
-                                    otherStyles ="w-[70px] mx-1"
-                                />
-                                <FormField //dropDown
-                                    title = "Time *"
-                                    value={form.startm}
-                                    handleChangeText={n => setForm({...form, startm:n})}
-                                    placeholder='mm'
-                                    otherStyles ="w-[70px] mx-1"
-                                />
-
-                                <View className="mx-2"/>
-
-                                {/* <FormField //dropDown
-                                    title = "end Date *"
-                                    value={form.endY}
-                                    handleChangeText={n => setForm({...form, endY:n})}
-                                    placeholder='YYYY'
-                                    otherStyles ="w-[75px] mx-1"
-                                />
-                                <FormField //dropDown
-                                    title = " "
-                                    value={form.endM}
-                                    handleChangeText={n => setForm({...form, endM:n})}
-                                    placeholder='MM'
-                                    otherStyles ="w-[40px] mx-1"
-                                />
-                                <FormField //dropDown
-                                    title = " "
-                                    value={form.endD}
-                                    handleChangeText={n => setForm({...form, endD:n})}
-                                    placeholder='DD'
-                                    otherStyles ="w-[40px] ml-1 mr-5"
-                                /> */}
-                                <FormField //dropDown
-                                    title = "            End"end
-                                    value={form.endH}
-                                    handleChangeText={n => setForm({...form, endH:n})}
-                                    placeholder='HH'
-                                    otherStyles ="w-[70px] mx-1"
-                                />
-                                <FormField //dropDown
-                                    title = "Time *"
-                                    value={form.endm}
-                                    handleChangeText={n => setForm({...form, endm:n})}
-                                    placeholder='mm'
-                                    otherStyles ="w-[70px] mx-1"
-                                />
+                                {/* End Time Group */}
+                                <View className="flex-col items-start">
+                                    <Text className="text-base font-medium text-gray-700 mb-0.5 ml-1">End Time *</Text>
+                                    <View className="flex-row">
+                                        <FormField
+                                            value={form.endH}
+                                            handleChangeText={n => setForm({ ...form, endH: n })}
+                                            placeholder="HH"
+                                            otherStyles="w-[70px] mx-1"
+                                        />
+                                        <FormField
+                                            value={form.endm}
+                                            handleChangeText={n => setForm({ ...form, endm: n })}
+                                            placeholder="mm"
+                                            otherStyles="w-[70px] mx-1"
+                                        />
+                                    </View>
+                                </View>
                             </View>
                             <FormField //Location
                                 title = "Location"
