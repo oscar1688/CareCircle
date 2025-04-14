@@ -48,7 +48,7 @@ const SignUp = () => {
       const result = await createUser(form.email, form.password, form.username);
 
       //CREATE USER FOR MONGODB
-      addUser({email: form.email, password: form.password, username: form.username, currentLocation:''})
+      addUser({email: form.email, password: form.password, username: form.username, currentLocation:[0,0]})
       
       setUser(result);
       setIsLogged(true);
