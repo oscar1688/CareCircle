@@ -8,6 +8,7 @@ import {User} from '../app/(tabs)/calendars/UserCalendar';
 import { UserHeader } from './ScreenElements';
 import { Overlay } from 'react-native-elements';
 import  FormField  from './FormField';
+import CustomButton from './CustomButton';
 import {getUserCalendars, getUserEmail, getCalendar, getUserID} from '../config';
 import { useGlobalContext } from '../context/GlobalProvider';
 
@@ -36,9 +37,8 @@ const CalendarListScreen = (props) => {
   ]);
 
   const [form, setForm] = useState({
-      users:[currentUser.id],
+      users:[currentUser.email],
       name:'',
-      description: '',
   })
 
   useEffect(()=>{
@@ -62,9 +62,8 @@ const CalendarListScreen = (props) => {
           setCalendarList(calList)
         })
         setForm({
-          users:[currentUser.id],
+          users:[currentUser.email],
           name:'',
-          description: '',
         })
     }catch(e){
         console.log("Error", e.message)
@@ -105,13 +104,7 @@ const CalendarListScreen = (props) => {
         data={calendars}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.itemRow}
-            onPress={() => router.push({pathname:'(tabs)/calendars/Users', params:{ calendarName: item.name, usersList: item.users, id: item.id }, options:{headerShown: false}})}
-          >
-            <Ionicons name="calendar" size={32} color="black" />
-            <Text style={styles.itemText}>{item.name}</Text>
-          </TouchableOpacity>
+          <CalendarListObject calendar={item}/>
         )}
       />
 
@@ -119,47 +112,130 @@ const CalendarListScreen = (props) => {
         <Ionicons name="add" size={24} color="purple" />
         <Text style={styles.actionText}>Add Calendar</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.actionRow} onPress={()=>{}}>
-        <Ionicons name="create-outline" size={24} color="purple" />
-        <Text style={styles.actionText}>Edit Calendar</Text>
-      </TouchableOpacity>
       </SafeAreaView>
 
       <Overlay isVisible={createCalendarOverlay} onBackdropPress={toggleOverlayCreate}>
-      <View className={`flex justify-center w-[400px] h-[500px] items-center border-4 bg-gray-200`}>
+      <View className={`flex justify-center w-[400px] h-[250px] items-center border-4 bg-gray-200`}>
         <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayCreate}>
             <Text className="text-purple-900 text-lg m-2">Back</Text>
         </TouchableOpacity>
             <Text className="absolute top-[10] text-lg font-bold text-purple-900">Create Calendar</Text>
         <TouchableOpacity className="absolute top-[0] right-[0]">
-                <Text className="text-purple-900 text-lg m-2" onPress={() =>{
+                <Text className="text-purple-900 text-lg m-2" onPress={() =>{                  
                   toggleOverlayCreate()
-                  console.log(form, currentUser)
+                  console.log(form)
+                  //TRIGGER CREATION
                   setForm({
-                    users:[currentUser.id],
+                    users:[currentUser.email],
                     name:'',
                     description: '',
                   })
                   }}>Save</Text>
         </TouchableOpacity>
-        <View className="absolute flex items-center border-0 h-5/6 justify-center w-full bottom-[50]">
+        <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
           <FormField 
               title = "Calendar Name *"
               value={form.name}
+              otherStyles="w-[300px]"
               handleChangeText={n => setForm({...form, name:n})}
               placeholder='Name'
           />
-          <FormField //Description
-              title = "Description"
-              value={form.description}
-              handleChangeText={n => setForm({...form, description:n})}
-              placeholder='Description'
-          />
         </View>
         </View>
-      </Overlay>
+      </Overlay>      
     </>
   );
+
+  function CalendarListObject(props){
+
+    const calendar = props.calendar
+    const [editCalendarOverlay, setEditCalendarOverlay] = useState(false);
+
+
+    const [editForm, setEditForm] = useState({
+      users:calendar.users,
+      name:calendar.name,
+    })
+
+    function toggleOverlayEdit(){
+      setEditCalendarOverlay(prev => !prev)
+    }
+
+    return(
+      
+      <>
+      <TouchableOpacity
+        style={styles.itemRow}
+        onPress={() => router.push({pathname:'(tabs)/calendars/Users', params:{ calendarName: calendar.name, usersList: calendar.users, id: calendar.id }, options:{headerShown: false}})}
+      >
+        <View className="flex-row items-center border-0 w-1/2">
+          <Ionicons name="calendar" size={32} color="black" />
+          <Text style={styles.itemText}>{calendar.name}</Text>
+        </View>            
+        <View className="flex-row-reverse items-center border-0 w-1/2">
+          <TouchableOpacity onPress={() => {toggleOverlayEdit()}}>
+            <Ionicons name="settings" size={32} color="black" />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+
+      <Overlay isVisible={editCalendarOverlay} onBackdropPress={toggleOverlayEdit}>
+        <View className={`flex justify-center w-[400px] h-[350px] items-center border-4 bg-gray-200`}>
+          <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayEdit}>
+              <Text className="text-purple-900 text-lg m-2">Back</Text>
+          </TouchableOpacity>
+              <Text className="absolute top-[10] text-lg font-bold text-purple-900">Edit Calendar</Text>
+          <TouchableOpacity className="absolute top-[0] right-[0]">
+                  <Text className="text-purple-900 text-lg m-2" onPress={() =>{
+                  console.log(editForm)
+                    toggleOverlayEdit()
+                    //TRIGGER UPDATE            
+                    }}>Save</Text>
+          </TouchableOpacity>
+          <View className="absolute flex items-center border-0 justify-center w-full bottom-[50]">
+            <FormField 
+                title = "Calendar Name *"
+                value={editForm.name}
+                otherStyles="w-[300]"
+                handleChangeText={n => setEditForm({...editForm, name:n})}
+                placeholder='Name'
+            />
+            <CustomButton title="Leave Calendar" textStyles="text-red-500" 
+            containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 mt-4" 
+            handlePress={async function LeaveCalendarDB(){
+              console.log('Trigger remove')
+                // try{
+                //     const f = form;
+                //     console.log(f.id)
+                //     deleteCalendar({ id: f.id }).then(event => console.log(event))
+                //     toggleOverlayEdit()
+                //     setIsChanged(true);
+                // }catch(e){
+                //     console.log('Error', e.message)
+                // }
+            }}/>
+            <CustomButton title="Delete Calendar" textStyles="text-red-500" 
+            containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
+            handlePress={async function deleteCalendarDB(){
+              console.log('Trigger delete')
+                // try{
+                //     const f = form;
+                //     console.log(f.id)
+                //     deleteCalendar({ id: f.id }).then(event => console.log(event))
+                //     toggleOverlayEdit()
+                //     setIsChanged(true);
+                // }catch(e){
+                //     console.log('Error', e.message)
+                // }
+            }}/>
+          </View>          
+          </View>
+        </Overlay>
+
+      </>
+    )
+  }
+
 };
 
 const UserListScreen = (props) => {
@@ -169,7 +245,15 @@ const UserListScreen = (props) => {
 
   // const { calendarName, usersList, id, calendar } = route.params;
   const calendar = props.calendar
-  const array = []
+  const [createCalendarOverlay, setCreateCalendarOverlay] = useState(false);
+  const [form, setForm] = useState({
+    newUsers:'',
+    currentUsers:[...calendar.users]
+  })
+
+  function toggleOverlayCreate(){
+      setCreateCalendarOverlay(prev => !prev)
+    }
 
   const [users, setUsers] = useState([
     { id: '1', name: 'Alice', color: 'green' },
@@ -210,26 +294,57 @@ const UserListScreen = (props) => {
         className="mt-10"
         data={users}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={()=>router.push({pathname:'(tabs)/calendars/UserCalendar', params:{ userId:item.id }, options:{headerShown: false}})}>
-            <View style={styles.itemRow}>
-              <Ionicons name="person-circle" size={32} color='purple' />
-              <Text style={styles.itemText}>{item.username}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) =>           
+          <UserListObject user={item}/>
+        }
       />
-      <TouchableOpacity style={styles.actionRow} onPress={() => {}}>
+      <TouchableOpacity style={styles.actionRow} onPress={() => {toggleOverlayCreate()}}>
         <Ionicons name="add" size={24} color="purple" />
         <Text style={styles.actionText}>Add User</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.actionRow}>
-        <Ionicons name="create-outline" size={24} color="purple" />
-        <Text style={styles.actionText}>Edit User</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>     
+
     </SafeAreaView>
+
+    <Overlay isVisible={createCalendarOverlay} onBackdropPress={toggleOverlayCreate}>
+      <View className={`flex justify-center w-[400px] h-[300px] items-center border-4 bg-gray-200`}>
+        <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayCreate}>
+            <Text className="text-purple-900 text-lg m-2">Back</Text>
+        </TouchableOpacity>
+            <Text className="absolute top-[10] text-lg font-bold text-purple-900">Add User</Text>
+        <TouchableOpacity className="absolute top-[0] right-[0]">
+                <Text className="text-purple-900 text-lg m-2" onPress={() =>{
+                  let tempArray = form.newUsers.split(",")
+                  let tempUserArray = [...form.currentUsers, ...tempArray]
+                  setForm({
+                    newUsers: form.newUsers,
+                    currentUsers: [...tempUserArray],
+                  })
+                  console.log(form, tempArray, tempUserArray) 
+                  // TRIGGER CREATION
+                  setForm({
+                    newUsers:'',
+                    currentUsers:[...calendar.users]
+                  })
+                  toggleOverlayCreate()
+                  }}>Save</Text>
+        </TouchableOpacity>
+        <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
+          <Text className="text-base text-red-500 font-pmedium ">Seperate emails by using comma " , " </Text>
+          <FormField 
+              title = "User Email"
+              value={form.newUsers}
+              otherStyles="w-[300px]"
+              handleChangeText={n => setForm({...form, newUsers:n})}
+              placeholder='Email(s)'
+          />
+          <Text>{form.currentUsers}</Text>
+        </View>
+        </View>
+      </Overlay>
     </>
   );
+
+  
 
   function BackButton(props){
     return(
@@ -240,6 +355,63 @@ const UserListScreen = (props) => {
             </View>
         </TouchableOpacity>    
     )
+  }
+
+  function UserListObject(props){
+
+    const user = props.user
+
+    const [editCalendarOverlay, setEditCalendarOverlay] = useState(false);
+
+    function toggleOverlayEdit(){
+      setEditCalendarOverlay(prev => !prev)
+    }
+
+    return(
+      <>
+        <TouchableOpacity onPress={()=>router.push({pathname:'(tabs)/calendars/UserCalendar', params:{ userId:user.id }, options:{headerShown: false}})}>
+          <View style={styles.itemRow}>
+            <View className="flex-row items-center border-0 w-1/2">            
+              <Ionicons name="person-circle" size={32} color='purple' />
+              <Text style={styles.itemText}>{user.username}</Text>
+            </View>            
+            <View className="flex-row-reverse items-center border-0 w-1/2">
+              <TouchableOpacity onPress={() => {toggleOverlayEdit()}}>
+                <Ionicons name="settings" size={32} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>        
+        </TouchableOpacity>
+
+        <Overlay isVisible={editCalendarOverlay} onBackdropPress={toggleOverlayEdit}>
+        <View className={`flex justify-center w-[400px] h-[300px] items-center border-4 bg-gray-200`}>
+          <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayEdit}>
+              <Text className="text-purple-900 text-lg m-2">Back</Text>
+          </TouchableOpacity>
+              <Text className="absolute top-[10] text-lg font-bold text-purple-900">Manage User</Text>
+          <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
+            <Text className="text-2xl font-bold mx-4 text-black">{user.username}</Text>   
+            <Text className="text-xl mx-4 text-black">{user.email}</Text>      
+            <CustomButton title="Remove User" textStyles="text-red-500" 
+              containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
+              handlePress={async function RemoveUserDB(){
+                console.log('Trigger Remove')
+                  // try{
+                  //     const f = form;
+                  //     console.log(f.id)
+                  //     deleteCalendar({ id: f.id }).then(event => console.log(event))
+                  //     toggleOverlayEdit()
+                  //     setIsChanged(true);
+                  // }catch(e){
+                  //     console.log('Error', e.message)
+                  // }
+              }}/>
+          </View>          
+          </View>
+        </Overlay>
+      </>
+    )
+
   }
 
 };

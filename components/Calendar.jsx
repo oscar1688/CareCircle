@@ -254,16 +254,17 @@ const Calendar = (props) => {
                                     value={form.startM}
                                     handleChangeText={n => setForm({...form, startM:n})}
                                     placeholder='MM'
-                                    otherStyles ="w-[40px] mx-1"
+                                    otherStyles ="w-[70px] mx-1"
                                 />
                                 <FormField //dropDown
                                     title = " "
                                     value={form.startD}
                                     handleChangeText={n => setForm({...form, startD:n})}
                                     placeholder='DD'
-                                    otherStyles ="w-[40px] ml-1 mr-5"
+                                    otherStyles ="w-[60px] ml-1 mr-5"
                                 />                                
                             </View>
+                            <Text className="text-base mx-2 mt-1 text-red-500 font-pmedium mx-2 mt-2">Please Use Military Time</Text>
                             <View className="flex-row">
 
                                 <FormField //dropDown
@@ -271,14 +272,14 @@ const Calendar = (props) => {
                                     value={form.startH}
                                     handleChangeText={n => setForm({...form, startH:n})}
                                     placeholder='HH'
-                                    otherStyles ="w-[70px] mx-1"
+                                    otherStyles ="w-[60px] mx-1"
                                 />
                                 <FormField //dropDown
                                     title = " "
                                     value={form.startm}
                                     handleChangeText={n => setForm({...form, startm:n})}
                                     placeholder='mm'
-                                    otherStyles ="w-[50px] mx-1"
+                                    otherStyles ="w-[60px] mx-1 right-[30px]"
                                 />
 
                                 <View className="mx-2"/>
@@ -309,14 +310,15 @@ const Calendar = (props) => {
                                     value={form.endH}
                                     handleChangeText={n => setForm({...form, endH:n})}
                                     placeholder='HH'
-                                    otherStyles ="w-[70px] mx-1"
+                                    otherStyles ="w-[60px] mx-1 "
+                                    fullStyle="right-[40px]"
                                 />
                                 <FormField //dropDown
                                     title = " "
                                     value={form.endm}
                                     handleChangeText={n => setForm({...form, endm:n})}
                                     placeholder='mm'
-                                    otherStyles ="w-[50px] mx-1"
+                                    otherStyles ="w-[60px] mx-1 right-[65px]"
                                 />
                             </View>
                             <FormField //Location
@@ -654,7 +656,7 @@ const Calendar = (props) => {
                 </TouchableOpacity>
     
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-                    <View className={`flex justify-center w-[400px] h-[500px] items-center border-4 bg-gray-200`}>
+                    <View className={`flex justify-center w-[400px] h-[250px] items-center border-4 bg-gray-200`}>
                         <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlay}>
                             <Text className="text-purple-900 text-lg m-2">Back</Text>
                         </TouchableOpacity>
@@ -663,7 +665,7 @@ const Calendar = (props) => {
                         <TouchableOpacity className="absolute top-[0] right-[0]" onPress={toggleOverlayEdit}>   
                            <Text className="text-purple-900 text-lg m-2">Edit</Text>
                         </TouchableOpacity>
-                        <View className="absolute flex border-0 h-5/6 justify-center w-full bottom-[50]">
+                        <View className="absolute flex border-0 h-5/6 justify-center w-full ">
                             <View className="flex-row border-0 my-2 items-center top-[5]"> 
                                 <Text className="text-xl font-bold mx-4 text-black">{props.event.title}</Text> 
                                 {props.event.location ? 
@@ -679,7 +681,7 @@ const Calendar = (props) => {
                     </View>
     
                     <Overlay isVisible={visibleEdit} onBackdropPress={toggleOverlayEdit}>
-                        <View className={`flex justify-center w-[400px] h-[500px] items-center border-4 bg-gray-200`}>
+                        <View className={`flex justify-center w-[400px] h-[550px] items-center border-4 bg-gray-200`}>
                             <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayEdit}>
                                 <Text className="text-purple-900 text-lg m-2">Back</Text>
                             </TouchableOpacity>
@@ -734,16 +736,17 @@ const Calendar = (props) => {
                                     value={form.startM}
                                     handleChangeText={n => setForm({...form, startM:n})}
                                     placeholder='MM'
-                                    otherStyles ="w-[40px] mx-1"
+                                    otherStyles ="w-[70px] mx-1"
                                 />
                                 <FormField //dropDown
                                     title = " "
                                     value={form.startD}
                                     handleChangeText={n => setForm({...form, startD:n})}
                                     placeholder='DD'
-                                    otherStyles ="w-[40px] ml-1 mr-5"
+                                    otherStyles ="w-[60px] ml-1 mr-5"
                                 />                                
                             </View>
+                            <Text className="text-base mx-2 mt-1 text-red-500 font-pmedium mx-2 mt-2">Please Use Military Time</Text>
                             <View className="flex-row">
 
                                 <FormField //dropDown
@@ -751,14 +754,14 @@ const Calendar = (props) => {
                                     value={form.startH}
                                     handleChangeText={n => setForm({...form, startH:n})}
                                     placeholder='HH'
-                                    otherStyles ="w-[70px] mx-1"
+                                    otherStyles ="w-[60px] mx-1"
                                 />
                                 <FormField //dropDown
                                     title = " "
                                     value={form.startm}
                                     handleChangeText={n => setForm({...form, startm:n})}
                                     placeholder='mm'
-                                    otherStyles ="w-[50px] mx-1"
+                                    otherStyles ="w-[60px] mx-1 right-[30px]"
                                 />
 
                                 <View className="mx-2"/>
@@ -789,14 +792,15 @@ const Calendar = (props) => {
                                     value={form.endH}
                                     handleChangeText={n => setForm({...form, endH:n})}
                                     placeholder='HH'
-                                    otherStyles ="w-[70px] mx-1"
+                                    otherStyles ="w-[60px] mx-1 "
+                                    fullStyle="right-[40px]"
                                 />
                                 <FormField //dropDown
                                     title = " "
                                     value={form.endm}
                                     handleChangeText={n => setForm({...form, endm:n})}
                                     placeholder='mm'
-                                    otherStyles ="w-[50px] mx-1"
+                                    otherStyles ="w-[60px] mx-1 right-[65px]"
                                 />
                             </View>
                             <FormField //Location
@@ -810,22 +814,24 @@ const Calendar = (props) => {
                                 title = "Description"
                                 value={form.description}
                                 handleChangeText={n => setForm({...form, description:n})}
-                                placeholder='Description'
+                                placeholder='Description'                                
                             />
-                                <CustomButton title="Delete Event" textStyles="text-red-500" 
-                                    containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
-                                    handlePress={async function deleteEventDB(){
-                                        try{
-                                            const f = form;
-                                            console.log(f.id)
-                                            deleteEvent({ id: f.id }).then(event => console.log(event))
-                                            toggleOverlayEdit()
-                                            setIsChanged(true);
-                                        }catch(e){
-                                            console.log('Error', e.message)
-                                        }
-                                    }}/>
-                            </View>                    
+
+                            <CustomButton title="Delete Event" textStyles="text-red-500" 
+                                containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
+                                handlePress={async function deleteEventDB(){
+                                    try{
+                                        const f = form;
+                                        console.log(f.id)
+                                        deleteEvent({ id: f.id }).then(event => console.log(event))
+                                        toggleOverlayEdit()
+                                        setIsChanged(true);
+                                    }catch(e){
+                                        console.log('Error', e.message)
+                                    }
+                                }}/>  
+                        </View>
+                                                
                         </View>
                     </Overlay>
                 </Overlay>

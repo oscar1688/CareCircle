@@ -108,6 +108,28 @@ export async function getUserID(id) {
     }
 }
 
+export async function addUser(parameters){
+    try {
+        const response = await fetch(DBurl+'/createUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(parameters),
+        });
+    if (response.ok) {
+        console.log('Success', 'Item added successfully!')
+        Alert.alert('Success', 'Item added successfully!');
+    } else {
+        console.log('Error', 'Failed to add item.')
+        Alert.alert('Error', 'Failed to add item.');
+    }
+    } catch (error) {
+        console.log('Error', error.message)
+        Alert.alert('Error', error.message);   
+    }      
+}
+
 export async function updateUser(parameters){
     try{
     const response = await fetch(DBurl+`/updateUser`, {
@@ -127,6 +149,28 @@ export async function updateUser(parameters){
     } catch (error) {
         console.error(error);
         Alert.alert('Error', error.message);  
+    }
+}
+
+export async function deleteUser(parameters){
+    try {
+        const response = await fetch(DBurl+`/deleteUser`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(parameters),                          
+        })
+        if(response.ok){
+            console.log('Success', 'Item deleted successfully!')
+            Alert.alert('Success', 'Item deleted successfully!');
+        }
+        if (!response.ok) {
+            throw new Error('Failed to delete entity');
+        }
+    } catch (error) {
+        console.error(error);
+        Alert.alert('Error', error.message);
     }
 }
 
@@ -154,9 +198,9 @@ export async function getCalendar(id) {
     }
 }
 
-export async function addUser(parameters){
+export async function addCalendar(parameters){
     try {
-        const response = await fetch(DBurl+'/createUser', {
+        const response = await fetch(DBurl+'/createCalendar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -174,4 +218,48 @@ export async function addUser(parameters){
         console.log('Error', error.message)
         Alert.alert('Error', error.message);   
     }      
+}
+
+export async function editCalendar(parameters){
+    try{
+    const response = await fetch(DBurl+`/updateCalendar`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parameters),
+    })
+    if(response.ok){
+        console.log('Success', 'Item updated successfully!')
+        Alert.alert('Success', 'Item update successfully!');
+    }
+    if (!response.ok) {
+        throw new Error('Failed to update entity');
+    }
+    } catch (error) {
+        console.error(error);
+        Alert.alert('Error', error.message);  
+    }
+}
+
+export async function deleteCalendar(parameters){
+    try {
+        const response = await fetch(DBurl+`/deleteCalendar`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(parameters),                          
+        })
+        if(response.ok){
+            console.log('Success', 'Item deleted successfully!')
+            Alert.alert('Success', 'Item deleted successfully!');
+        }
+        if (!response.ok) {
+            throw new Error('Failed to delete entity');
+        }
+    } catch (error) {
+        console.error(error);
+        Alert.alert('Error', error.message);
+    }
 }

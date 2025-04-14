@@ -14,7 +14,7 @@ const app = express()
 app.use(express.json()) 
 app.use(cors())
 
-console.log(connectDB(),'hello')
+console.log(connectDB())
 
 app.get('/getUsers', async (req, res) => {
     const users = await userModel.find({})
@@ -47,6 +47,20 @@ app.patch('/updateUser', async (req, res) =>{
     res.status(500).json({ message: error.message });
   }
 })
+
+app.delete('/deleteUser', async (req, res) => {
+  const userId = req.body.id;
+    console.log(req.body.id, req.body)
+  try {
+    const item = await userModel.findByIdAndDelete(userId);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.status(200).json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting item', error: error.message });
+  }
+});
 
 app.get('/getCalendar/:id', async (req, res) => {
     const calendarId = req.params.id;
@@ -148,6 +162,44 @@ app.delete('/deleteEvent', async (req, res) => {
     console.log(req.body.id, req.body)
   try {
     const item = await eventModel.findByIdAndDelete(eventId);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.status(200).json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting item', error: error.message });
+  }
+});
+
+app.post('/createCalendar', async (req, res) =>{
+  try{
+    const newCalendar = await calendarModel.create(req.body);
+    res.status(200).json(newCalendar);
+  }catch(e){
+    res.status(500).json({message: e.message})
+  }
+});
+
+app.patch('/updateCalendar', async (req, res) =>{
+  try {
+    const calendarId = req.body.id;
+    console.log(req.body.id, req.body)
+    const updatedData = req.body;
+    const updatedEntity = await calendarModel.findByIdAndUpdate(calendarId, updatedData, { new: true });
+    if (!updatedEntity) {
+      return res.status(404).json({ message: 'Entity not found' });
+    }
+    res.json(updatedEntity);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+})
+
+app.delete('/deleteCalendar', async (req, res) => {
+  const calendarId = req.body.id;
+    console.log(req.body.id, req.body)
+  try {
+    const item = await calendarModel.findByIdAndDelete(calendarId);
     if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
