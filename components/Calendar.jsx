@@ -843,7 +843,6 @@ const Calendar = (props) => {
 
     function checkForm(form){
 
-        try{    
             const f = form
 
             let sY = 0
@@ -882,50 +881,47 @@ const Calendar = (props) => {
             }
             
             if(f.startY == '' || f.startM == '' || f.startD == '' || f.name == ''){
-                throw("fields with * must not be empty")
+                throw new Error("fields with * must not be empty")
             }
 
             if(
                 isNaN(sY) || isNaN(sM) || isNaN(sD) || isNaN(sH) || isNaN(sm) ||
                 isNaN(eY) || isNaN(eM)|| isNaN(eD) || isNaN(eH) || isNaN(em)
             ){
-                throw("Time inputs must be a number")
+                throw new Error("Time inputs must be a number")
             }
 
             if(sY != eY || sM != eM || sD != eD){
-                throw("Only same day events are supported at this time")
+                throw new Error("Only same day events are supported at this time")
             }  
         
             if(sH > eH || (sH == eH && sm >= em)){
-                throw("Start time must be before end time")
+                throw new Error("Start time must be before end time")
             }    
 
             if(sM >= 12 || sM <= 1 || eM >= 12 || eM <= 1){
-                throw("Check month number; month doesn't exist")
+                throw new Error("Check month number; month doesn't exist")
             }
 
             if(sD < 1 || eD < 1){
-                throw("Check date number; date doesn't exist")
+                throw new Error("Check date number; date doesn't exist")
             }
             if(sM == 2 && sD > 28 && sY%4 != 0){
-                throw("Check date number; date doesn't exist")
+                throw new Error("Check date number; date doesn't exist")
             }
             else if(sM == 2 && sD > 29 && sY%4 == 0){
-                throw("Check date number; date doesn't exist")
+                throw new Error("Check date number; date doesn't exist")
             }
 
             if((sM == 1 || sM == 3 || sM == 5 || sM == 7 || sM == 8 || sM == 10 || sM == 12) && sD > 31){
-                throw("Check date number; date doesn't exist")
+                throw new Error("Check date number; date doesn't exist")
             }else if((sM == 4 || sM == 6 || sM == 9 || sM == 11) && sD > 30){
-                throw("Check date number; date doesn't exist")
+                throw new Error("Check date number; date doesn't exist")
             }
 
             if(sY < 2020 || sY > 2100){
-                throw("Year is out of currently supported bounds")
+                throw new Error("Year is out of currently supported bounds")
             }
-        }catch(e){
-            console.log("Error", e.message)
-        }
     }
     
     function CurrentTimeLine(){

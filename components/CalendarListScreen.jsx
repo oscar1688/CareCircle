@@ -9,8 +9,9 @@ import { UserHeader } from './ScreenElements';
 import { Overlay } from 'react-native-elements';
 import  FormField  from './FormField';
 import CustomButton from './CustomButton';
-import {getUserCalendars, getUserEmail, getCalendar, getUserID} from '../config';
+import {getUserCalendars, getUserEmail, getCalendar, getUserID, addCalendar, editCalendar, deleteCalendar} from '../config';
 import { useGlobalContext } from '../context/GlobalProvider';
+import {Alert} from 'react-native';
 
 
 
@@ -28,6 +29,7 @@ const CalendarListScreen = (props) => {
   
   const email = props.user.email
   // props.user.email
+  const [isChanged, setIsChanged] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [calendarList, setCalendarList] = useState([]);
   const [createCalendarOverlay, setCreateCalendarOverlay] = useState(false);
@@ -54,7 +56,8 @@ const CalendarListScreen = (props) => {
       }catch(e){
           console.log("Error", e.message)
       }
-  },[]) //get from DB
+      setIsChanged(false)
+  },[isChanged]) //get from DB
 
   useEffect(()=>{
     try{
@@ -121,16 +124,27 @@ const CalendarListScreen = (props) => {
         </TouchableOpacity>
             <Text className="absolute top-[10] text-lg font-bold text-purple-900">Create Calendar</Text>
         <TouchableOpacity className="absolute top-[0] right-[0]">
-                <Text className="text-purple-900 text-lg m-2" onPress={() =>{                  
-                  toggleOverlayCreate()
-                  console.log(form)
-                  //TRIGGER CREATION
-                  setForm({
-                    users:[currentUser.email],
-                    name:'',
-                    description: '',
-                  })
-                  }}>Save</Text>
+                <Text className="text-purple-900 text-lg m-2" onPress={() =>{  
+                  try{
+                    checkForm(form)
+                    addCalendar({
+                      calendarName: form.name,
+                      users:form.users
+                    })
+                    setIsChanged(true)
+                    toggleOverlayCreate()
+                    console.log(form)
+                    //TRIGGER CREATION
+                    setForm({
+                      users:[currentUser.email],
+                      name:'',
+                      description: '',
+                    })
+                  }catch(e){
+                    console.log("Error", e.message)
+                    Alert.alert("Error", e.message)
+                  }                   
+                  }}>Add</Text>
         </TouchableOpacity>
         <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
           <FormField 
@@ -153,6 +167,7 @@ const CalendarListScreen = (props) => {
 
 
     const [editForm, setEditForm] = useState({
+      id:calendar.id,
       users:calendar.users,
       name:calendar.name,
     })
@@ -187,8 +202,19 @@ const CalendarListScreen = (props) => {
               <Text className="absolute top-[10] text-lg font-bold text-purple-900">Edit Calendar</Text>
           <TouchableOpacity className="absolute top-[0] right-[0]">
                   <Text className="text-purple-900 text-lg m-2" onPress={() =>{
-                  console.log(editForm)
-                    toggleOverlayEdit()
+                    try{
+                      console.log(editForm)
+                      checkForm(editForm)
+                      editCalendar({
+                        id:editForm.id,
+                        calendarName:editForm.name,
+                      })
+                      setIsChanged(true)
+                      toggleOverlayEdit()
+                    }catch(e){
+                      console.log("Error", e.message)
+                      Alert.alert("Error", e.message)
+                    }
                     //TRIGGER UPDATE            
                     }}>Save</Text>
           </TouchableOpacity>
@@ -203,6 +229,26 @@ const CalendarListScreen = (props) => {
             <CustomButton title="Leave Calendar" textStyles="text-red-500" 
             containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 mt-4" 
             handlePress={async function LeaveCalendarDB(){
+              try{
+                const temp = calendar.users.filter(item => item != currentUser.email)
+                console.log(temp, currentUser.email)
+                if(temp.length > 0){
+                  editCalendar({
+                    id:calendar.id,
+                    users:temp,
+                  })
+                  setIsChanged(true)
+                }
+                else{
+                  deleteCalendar({
+                    id:calendar.id
+                  })
+                  setIsChanged(true)
+                }
+              }catch(e){
+                console.log("Error", e.message)
+              }
+              
               console.log('Trigger remove')
                 // try{
                 //     const f = form;
@@ -217,6 +263,10 @@ const CalendarListScreen = (props) => {
             <CustomButton title="Delete Calendar" textStyles="text-red-500" 
             containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
             handlePress={async function deleteCalendarDB(){
+              deleteCalendar({
+                id:calendar.id
+              })
+              setIsChanged(true)
               console.log('Trigger delete')
                 // try{
                 //     const f = form;
@@ -236,6 +286,17 @@ const CalendarListScreen = (props) => {
     )
   }
 
+  function checkForm(form){
+    try{
+      const f = form
+      if(f.name == ''){
+        throw new Error("Fields with * can not be blank")
+      }
+    }catch(e){
+      console.log(e)
+    }
+  }
+
 };
 
 const UserListScreen = (props) => {
@@ -245,7 +306,9 @@ const UserListScreen = (props) => {
 
   // const { calendarName, usersList, id, calendar } = route.params;
   const calendar = props.calendar
+  const [isChanged, setIsChanged] = useState(false);
   const [createCalendarOverlay, setCreateCalendarOverlay] = useState(false);
+  const [userList, setUserList] = useState([])
   const [form, setForm] = useState({
     newUsers:'',
     currentUsers:[...calendar.users]
@@ -260,15 +323,16 @@ const UserListScreen = (props) => {
     { id: '2', name: 'Bob', color: 'red' },
     { id: '3', name: 'Charlie', color: 'purple' },
   ]);
-  const [userList, setUserList] = useState([])
 
   useEffect(()=>{
     try{
-        setUserList(calendar.users)   
+        // setUserList(calendar.users)   
+        getCalendar(calendar.id).then(calendar => setUserList(calendar.users))
     }catch(e){
       console.log('Error',e.message)
     }
-  },[])
+    setIsChanged(false)
+  },[isChanged])
 
   useEffect(()=>{
     try{
@@ -313,31 +377,61 @@ const UserListScreen = (props) => {
             <Text className="absolute top-[10] text-lg font-bold text-purple-900">Add User</Text>
         <TouchableOpacity className="absolute top-[0] right-[0]">
                 <Text className="text-purple-900 text-lg m-2" onPress={() =>{
-                  let tempArray = form.newUsers.split(",")
-                  let tempUserArray = [...form.currentUsers, ...tempArray]
-                  setForm({
-                    newUsers: form.newUsers,
-                    currentUsers: [...tempUserArray],
-                  })
-                  console.log(form, tempArray, tempUserArray) 
+                  // let tempArray = form.newUsers.split(",")
+                  // try{
+                  //   tempArray = [... new Set(tempArray)]
+                  //   tempArray = tempArray.filter(item => calendar.users.indexOf(item) == -1)
+                    
+                  // }catch(e){
+                  //   console.log("Error", e.message)
+                  //   Alert.alert("Error", e.message)
+                  // }                     
+
+                  try{
+                    getUserEmail(form.newUsers).then(res => {
+                    if(!res){
+                      throw new Error("user doesnt exist")
+                    }else if(calendar.users.indexOf(res.email) != -1){
+                      throw new Error("user already added")
+                    }else{
+                      return res.email;
+                    }}).then(res => {
+                      console.log(res)
+                      editCalendar({
+                        id:calendar.id,
+                        users:[...calendar.users, res]
+                      })
+                      setIsChanged(true)
+                    })
+                    .catch(e => {console.log("Error", e.message), Alert.alert("Error", e.message)})
+                  }catch(e){
+                    console.log("Error", e.message)
+                    Alert.alert("Error", e.message)
+                  }
+                  // let tempUserArray = [...form.currentUsers, ...tempArray]
+                  // getCalendar()
+                  // setForm({
+                  //   newUsers: form.newUsers,
+                  //   currentUsers: [...tempUserArray],
+                  // })
+                  // console.log(form, tempArray, tempUserArray) 
                   // TRIGGER CREATION
-                  setForm({
-                    newUsers:'',
-                    currentUsers:[...calendar.users]
-                  })
+                  // setForm({
+                  //   newUsers:'',
+                  //   currentUsers:[...calendar.users]
+                  // })
                   toggleOverlayCreate()
-                  }}>Save</Text>
+                  }}>Add</Text>
         </TouchableOpacity>
         <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
-          <Text className="text-base text-red-500 font-pmedium ">Seperate emails by using comma " , " </Text>
+          <Text className="text-base text-red-500 font-pmedium ">Add one user at a time</Text>
           <FormField 
               title = "User Email"
               value={form.newUsers}
               otherStyles="w-[300px]"
               handleChangeText={n => setForm({...form, newUsers:n})}
-              placeholder='Email(s)'
+              placeholder='Email'
           />
-          <Text>{form.currentUsers}</Text>
         </View>
         </View>
       </Overlay>
@@ -395,6 +489,22 @@ const UserListScreen = (props) => {
             <CustomButton title="Remove User" textStyles="text-red-500" 
               containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
               handlePress={async function RemoveUserDB(){
+                try{
+                  const temp = calendar.users.filter(item => item != user.email)
+                  if(temp.length > 0){
+                    editCalendar({
+                      id:calendar.id,
+                      users:temp,
+                    })
+                    setIsChanged(true)
+                  }
+                  else{
+                    console.log("Can not remove last user, please delete calendar instead")                                 
+                    Alert.alert("Can not remove last user, please delete calendar instead")                                 
+                  }
+                }catch(e){
+                  console.log("Error", e.message)
+                }
                 console.log('Trigger Remove')
                   // try{
                   //     const f = form;
