@@ -7,11 +7,11 @@ import { Calendar } from '../../../components/CalendarListScreen'
 
 const UserScreen = () => {
 
-    const { calendarName, usersList, id } = useLocalSearchParams();
+    const { calendarName, usersList, id, currentUserEmail } = useLocalSearchParams();
     const calendar = new Calendar(id, calendarName, usersList.split(',')) 
     return(
         <>
-            <UserListScreen calendar={calendar}/>
+            <UserListScreen calendar={calendar} currentUserEmail={currentUserEmail}/>
         </>
     )
 }

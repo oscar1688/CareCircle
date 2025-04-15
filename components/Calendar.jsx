@@ -248,6 +248,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startY:n})}
                                     placeholder='YYYY'
                                     otherStyles ="w-[80px] mx-1"
+                                    keyboardType="numeric"
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -255,6 +256,8 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startM:n})}
                                     placeholder='MM'
                                     otherStyles ="w-[70px] mx-1"
+                                    keyboardType="numeric"
+
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -262,6 +265,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startD:n})}
                                     placeholder='DD'
                                     otherStyles ="w-[60px] ml-1 mr-5"
+                                    keyboardType="numeric"
                                 />                                
                             </View>
                             <Text className="text-base mx-2 mt-1 text-red-500 font-pmedium mx-2 mt-2">Please Use Military Time</Text>
@@ -273,6 +277,8 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startH:n})}
                                     placeholder='HH'
                                     otherStyles ="w-[60px] mx-1"
+                                    keyboardType="numeric"
+
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -280,6 +286,8 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startm:n})}
                                     placeholder='mm'
                                     otherStyles ="w-[60px] mx-1 right-[30px]"
+                                    keyboardType="numeric"
+
                                 />
 
                                 <View className="mx-2"/>
@@ -312,6 +320,8 @@ const Calendar = (props) => {
                                     placeholder='HH'
                                     otherStyles ="w-[60px] mx-1 "
                                     fullStyle="right-[40px]"
+                                    keyboardType="numeric"
+
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -319,6 +329,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, endm:n})}
                                     placeholder='mm'
                                     otherStyles ="w-[60px] mx-1 right-[65px]"
+                                    keyboardType="numeric"
                                 />
                             </View>
                             <FormField //Location
@@ -730,6 +741,8 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startY:n})}
                                     placeholder='YYYY'
                                     otherStyles ="w-[80px] mx-1"
+                                    keyboardType="numeric"
+
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -737,6 +750,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startM:n})}
                                     placeholder='MM'
                                     otherStyles ="w-[70px] mx-1"
+                                    keyboardType="numeric"
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -744,6 +758,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startD:n})}
                                     placeholder='DD'
                                     otherStyles ="w-[60px] ml-1 mr-5"
+                                    keyboardType="numeric"
                                 />                                
                             </View>
                             <Text className="text-base mx-2 mt-1 text-red-500 font-pmedium mx-2 mt-2">Please Use Military Time</Text>
@@ -755,6 +770,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startH:n})}
                                     placeholder='HH'
                                     otherStyles ="w-[60px] mx-1"
+                                    keyboardType="numeric"
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -762,6 +778,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, startm:n})}
                                     placeholder='mm'
                                     otherStyles ="w-[60px] mx-1 right-[30px]"
+                                    keyboardType="numeric"
                                 />
 
                                 <View className="mx-2"/>
@@ -794,6 +811,7 @@ const Calendar = (props) => {
                                     placeholder='HH'
                                     otherStyles ="w-[60px] mx-1 "
                                     fullStyle="right-[40px]"
+                                    keyboardType="numeric"
                                 />
                                 <FormField //dropDown
                                     title = " "
@@ -801,6 +819,7 @@ const Calendar = (props) => {
                                     handleChangeText={n => setForm({...form, endm:n})}
                                     placeholder='mm'
                                     otherStyles ="w-[60px] mx-1 right-[65px]"
+                                    keyboardType="numeric"
                                 />
                             </View>
                             <FormField //Location

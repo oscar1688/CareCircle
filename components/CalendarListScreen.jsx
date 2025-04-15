@@ -181,7 +181,7 @@ const CalendarListScreen = (props) => {
       <>
       <TouchableOpacity
         style={styles.itemRow}
-        onPress={() => router.push({pathname:'(tabs)/calendars/Users', params:{ calendarName: calendar.name, usersList: calendar.users, id: calendar.id }, options:{headerShown: false}})}
+        onPress={() => router.push({pathname:'(tabs)/calendars/Users', params:{ calendarName: calendar.name, usersList: calendar.users, id: calendar.id, currentUserEmail: currentUser.email }, options:{headerShown: false}})}
       >
         <View className="flex-row items-center border-0 w-1/2">
           <Ionicons name="calendar" size={32} color="black" />
@@ -306,6 +306,8 @@ const UserListScreen = (props) => {
 
   // const { calendarName, usersList, id, calendar } = route.params;
   const calendar = props.calendar
+  const currentUserEmail = props.currentUserEmail
+  const [currentUser, setCurrentUser] = useState({});
   const [isChanged, setIsChanged] = useState(false);
   const [createCalendarOverlay, setCreateCalendarOverlay] = useState(false);
   const [userList, setUserList] = useState([])
@@ -326,7 +328,8 @@ const UserListScreen = (props) => {
 
   useEffect(()=>{
     try{
-        // setUserList(calendar.users)   
+        // setUserList(calendar.users) 
+        getUserEmail(currentUserEmail).then(res => setCurrentUser(res))
         getCalendar(calendar.id).then(calendar => setUserList(calendar.users))
     }catch(e){
       console.log('Error',e.message)
@@ -376,61 +379,76 @@ const UserListScreen = (props) => {
         </TouchableOpacity>
             <Text className="absolute top-[10] text-lg font-bold text-purple-900">Add User</Text>
         <TouchableOpacity className="absolute top-[0] right-[0]">
-                <Text className="text-purple-900 text-lg m-2" onPress={() =>{
-                  // let tempArray = form.newUsers.split(",")
-                  // try{
-                  //   tempArray = [... new Set(tempArray)]
-                  //   tempArray = tempArray.filter(item => calendar.users.indexOf(item) == -1)
-                    
-                  // }catch(e){
-                  //   console.log("Error", e.message)
-                  //   Alert.alert("Error", e.message)
-                  // }                     
-
+                <Text className="text-purple-900 text-lg m-2" onPress={async () =>{
+                  let existError = false
+                  let addError = false
+                  let tempArray = form.newUsers.split(",")
+                    tempArray = [... new Set(tempArray)]
                   try{
-                    getUserEmail(form.newUsers).then(res => {
-                    if(!res){
-                      throw new Error("user doesnt exist")
-                    }else if(calendar.users.indexOf(res.email) != -1){
-                      throw new Error("user already added")
+
+                    const sub = await getCalendar(calendar.id);
+                      console.log(sub)
+                    const emailResults = await Promise.all(tempArray.map(async item =>{
+                      const user = await getUserEmail(item);
+                      if(user){
+                        if(sub.users.indexOf(user.email) == -1){
+                          console.log("exists",user.email)
+                          return user.email
+                        }else{
+                          console.log("user already in calendar")
+                          addError = true
+                          return null
+                        }                        
+                      }else{
+                        console.log("no exists")
+                        existError = true
+                        return null
+                      }
+                    }))
+
+                    const filteredArray = emailResults.filter(email => email != null)
+
+                    if(filteredArray.length > 0){
+                      getCalendar(calendar.id).then(res => editCalendar({
+                        id: res._id,
+                        users: [...res.users, ...filteredArray]
+                      })).then(
+                        getCalendar(calendar.id).then(res => {return res.users}).then(res => setForm({
+                          newUsers:'',
+                          currentUsers: [...res]
+                      })))
                     }else{
-                      return res.email;
-                    }}).then(res => {
-                      console.log(res)
-                      editCalendar({
-                        id:calendar.id,
-                        users:[...calendar.users, res]
-                      })
-                      setIsChanged(true)
-                    })
-                    .catch(e => {console.log("Error", e.message), Alert.alert("Error", e.message)})
+
+                    }
+
+                    if(existError == true && addError == true){
+                      throw new Error("users dont exist and already in calendar")
+                    }else if(existError == true){
+                      throw new Error("users dont exist")
+                    }else if(addError == true){
+                      throw new Error("users already in calendar")
+                    }
+
+                    console.log(tempArray, filteredArray, emailResults)
+
+                    setIsChanged(true)
+                    
                   }catch(e){
                     console.log("Error", e.message)
                     Alert.alert("Error", e.message)
-                  }
-                  // let tempUserArray = [...form.currentUsers, ...tempArray]
-                  // getCalendar()
-                  // setForm({
-                  //   newUsers: form.newUsers,
-                  //   currentUsers: [...tempUserArray],
-                  // })
-                  // console.log(form, tempArray, tempUserArray) 
-                  // TRIGGER CREATION
-                  // setForm({
-                  //   newUsers:'',
-                  //   currentUsers:[...calendar.users]
-                  // })
+                  }    
                   toggleOverlayCreate()
                   }}>Add</Text>
         </TouchableOpacity>
         <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
-          <Text className="text-base text-red-500 font-pmedium ">Add one user at a time</Text>
+          <Text className="text-base text-red-500 font-pmedium ">Seperate emails by comma " , "</Text>
+          <Text className="text-base text-red-500 font-pmedium ">No spaces</Text>
           <FormField 
               title = "User Email"
               value={form.newUsers}
               otherStyles="w-[300px]"
               handleChangeText={n => setForm({...form, newUsers:n})}
-              placeholder='Email'
+              placeholder='Email(s)'
           />
         </View>
         </View>
@@ -486,11 +504,19 @@ const UserListScreen = (props) => {
           <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
             <Text className="text-2xl font-bold mx-4 text-black">{user.username}</Text>   
             <Text className="text-xl mx-4 text-black">{user.email}</Text>      
+            {user.email == currentUser.email ? <></> :
             <CustomButton title="Remove User" textStyles="text-red-500" 
               containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
               handlePress={async function RemoveUserDB(){
                 try{
-                  const temp = calendar.users.filter(item => item != user.email)
+                  // const temp = calendar.users.filter(item => item != user.email)
+                  
+                  const subCal = await getCalendar(calendar.id)
+
+                  const temp = subCal.users.filter(item => item != user.email)
+
+                  console.log(subCal, temp)
+
                   if(temp.length > 0){
                     editCalendar({
                       id:calendar.id,
@@ -499,23 +525,14 @@ const UserListScreen = (props) => {
                     setIsChanged(true)
                   }
                   else{
-                    console.log("Can not remove last user, please delete calendar instead")                                 
-                    Alert.alert("Can not remove last user, please delete calendar instead")                                 
+                    throw new Error("Can not remove last user, please delete calendar instead")                                 
                   }
                 }catch(e){
                   console.log("Error", e.message)
+                  Alert.alert("Error", e.message)
                 }
-                console.log('Trigger Remove')
-                  // try{
-                  //     const f = form;
-                  //     console.log(f.id)
-                  //     deleteCalendar({ id: f.id }).then(event => console.log(event))
-                  //     toggleOverlayEdit()
-                  //     setIsChanged(true);
-                  // }catch(e){
-                  //     console.log('Error', e.message)
-                  // }
               }}/>
+            }
           </View>          
           </View>
         </Overlay>
