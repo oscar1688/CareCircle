@@ -69,13 +69,14 @@ const SignIn = () => {
         </Link>
 
         {/* Logo */}
-        <View className="items-center mt-12 mb-8 pt-30">
-          <View className="w-24 h-24 bg-carecircle-purple/10 rounded-2xl items-center justify-center">
-            <Image
+        <View className="items-center mt-12 mb-8 pt-30 top-[50]">
+          <View className="w-24 h-24 bg-carecircle-purple/10 rounded-2xl items-center justify-center mb-[100px]">
+            {/* <Image
               source={require('../../assets/images/logo.png')}
               className="w-40 h-40"
               resizeMode="contain"
-            />
+            /> */}
+            <Image source={require('../../assets/images/logo.png')} style={{width:250, height:250}}/>
           </View>
         </View>
 

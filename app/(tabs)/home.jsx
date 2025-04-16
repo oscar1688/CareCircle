@@ -42,7 +42,7 @@ const Home = () => {
     }catch(e){
       console.log("Error", e.message);
     }
-  },[currentUser])
+  },[currentUser, location])
 
   // console.log(location, location.latitude, location.longitude, address, errorMsg)
 

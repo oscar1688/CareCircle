@@ -36,7 +36,7 @@ export default function Index() {
         <View className="absolute top-0 right-0 w-[100px] h-[100px] bg-carecircle-purple-dark rounded-bl-full" />
 
         {/* Logo */}
-        <View className="w-[100px] h-[100px] mb-6">
+        <View className="w-[250px] h-[250px] mb-6 right-[5]">
           <Image
             source={require('../assets/images/logo.png')}
             className="w-full h-full"

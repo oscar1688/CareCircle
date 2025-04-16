@@ -195,6 +195,7 @@ const Calendar = (props) => {
                                 const f = form;    
                                 try{
                                     //CHECKS
+                                    console.log(f)
                                     checkForm(f)
     
                                     let start = [parseInt(f.startY, 10), parseInt(f.startM, 10), parseInt(f.startD, 10), parseInt(f.startH, 10), parseInt(f.startm, 10)];
@@ -884,8 +885,8 @@ const Calendar = (props) => {
                 eY = parseInt(f.startY)
                 eM = parseInt(f.startM)
                 eD = parseInt(f.startD)
-                eH = parseInt(f.startH)
-                em = parseInt(f.startm)
+                eH = parseInt(f.endH)
+                em = parseInt(f.endm)
             }else{
                 sY = parseInt(f.startY)
                 sM = parseInt(f.startM)

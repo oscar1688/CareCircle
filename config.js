@@ -141,7 +141,7 @@ export async function updateUser(parameters){
     })
     if(response.ok){
         console.log('Success', 'Item updated successfully!')
-        Alert.alert('Success', 'Item update successfully!');
+        // Alert.alert('Success', 'Item update successfully!');
     }
     if (!response.ok) {
         throw new Error('Failed to update entity');
