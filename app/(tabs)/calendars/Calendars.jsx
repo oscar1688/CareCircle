@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, View, Text,} from 'react-native';
+import { Image, StyleSheet, Platform, View, Text, ActivityIndicator} from 'react-native';
 import React , { useState, useEffect } from 'react';
 import { CalendarListScreen } from '../../../components/CalendarListScreen';
 import{Slot, Stack} from 'expo-router';
@@ -78,6 +78,7 @@ const Calendars = () => {
             {!currentUser.email ? 
                 <View className="w-full h-full justify-center items-center">
                     <Text className ="text-lg font-bold text-purple-900">Loading...</Text>
+                    <ActivityIndicator/>
                 </View>: 
                 <CalendarListScreen user={currentUser}/>}
         </>

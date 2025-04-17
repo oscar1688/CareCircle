@@ -10,6 +10,7 @@ const FormField = ({
   handleChangeText,
   otherStyles,
   fullStyle,
+  keyboardType,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +26,7 @@ const FormField = ({
         <View className="w-full h-12 px-4 bg-white rounded-2xl border-2 border-carecircle-purple-light focus:border-secondary flex flex-row items-center">
           <TextInput
             className="flex-1 w-full text-black font-psemibold text-base"
+            keyboardType={keyboardType}
             value={value}
             placeholder={placeholder}
             placeholderTextColor="#7B7B8B"

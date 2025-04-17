@@ -82,14 +82,14 @@ const Profile = () => {
       </View>
 
       {/* Settings Button */}
-      <TouchableOpacity className="flex-row items-center p-4 border-t border-b border-gray-200 mt-8">
+      {/* <TouchableOpacity className="flex-row items-center p-4 border-t border-b border-gray-200 mt-8">
         <Image
           source={require('../../assets/icons/menu.png')}
           className="w-6 h-6 mr-3 tint-[#4C6444]"
           resizeMode="contain"
         />
         <Text className="text-base text-gray-800">Setting</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* Sign Out Button */}
       <TouchableOpacity 

@@ -1,7 +1,7 @@
 // React Native code for two interactive UI pages: Calendars & Users
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, Image, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRouter, useLocalSearchParams } from 'expo-router';
 import {User} from '../app/(tabs)/calendars/UserCalendar';
@@ -24,9 +24,11 @@ export class Calendar{
 }
 
 
-
 const CalendarListScreen = (props) => {
   
+  const {width, height} = useWindowDimensions();
+
+
   const email = props.user.email
   // props.user.email
   const [isChanged, setIsChanged] = useState(false);
@@ -56,8 +58,7 @@ const CalendarListScreen = (props) => {
       }catch(e){
           console.log("Error", e.message)
       }
-      setIsChanged(false)
-  },[isChanged]) //get from DB
+  },[]) //get from DB
 
   useEffect(()=>{
     try{
@@ -71,22 +72,50 @@ const CalendarListScreen = (props) => {
     }catch(e){
         console.log("Error", e.message)
     }
-  },[currentUser]) //get from DB
+  },[isChanged, currentUser]) //get from DB
 
-    useEffect(()=>{
-      try{
-        let tempArray = [];
-        calendarList.map(id => {
-          getCalendar(id._id).then(cal => {
-                const calObj = new Calendar(cal._id, cal.calendarName, cal.users)
-                    tempArray.push(calObj);
-            }).catch((error) => console.error('Error fetching events:', error))
-        })
-        setCalendars(prev => tempArray)
-      }catch(e){
-        console.log('Error', e.message)
-      }
-    },[calendarList])
+    // useEffect(()=>{
+    //   try{
+    //     let tempArray = [];
+    //     calendarList.map(id => {
+    //       getCalendar(id._id).then(cal => {
+    //             const calObj = new Calendar(cal._id, cal.calendarName, cal.users)
+    //                 tempArray.push(calObj);
+    //         }).catch((error) => console.error('Error fetching events:', error))
+    //     })
+    //     setCalendars(prev => tempArray)
+    //   }catch(e){
+    //     console.log('Error', e.message)
+    //   }
+    //   console.log("Render")
+    //   setIsChanged(false)
+    // },[calendarList])
+
+    useEffect(() => {
+      const fetchCalendars = async () => {
+        try {
+          const calendarPromises = calendarList.map(id =>
+            getCalendar(id._id)
+              .then(cal => new Calendar(cal._id, cal.calendarName, cal.users))
+              .catch((error) => {
+                console.error('Error fetching calendar:', error);
+                return null; // Handle or skip errors
+              })
+          );
+    
+          const results = await Promise.all(calendarPromises);
+          const validCalendars = results.filter(cal => cal !== null);
+          setCalendars(validCalendars);
+        } catch (e) {
+          console.error('Error in fetchCalendars:', e.message);
+        } finally {
+          setIsChanged(false);
+        }
+        console.log("Render");
+      };
+    
+      fetchCalendars();
+    }, [calendarList]);
 
     function toggleOverlayCreate(){
       setCreateCalendarOverlay(prev => !prev)
@@ -118,7 +147,7 @@ const CalendarListScreen = (props) => {
       </SafeAreaView>
 
       <Overlay isVisible={createCalendarOverlay} onBackdropPress={toggleOverlayCreate}>
-      <View className={`flex justify-center w-[400px] h-[250px] items-center border-4 bg-gray-200`}>
+      <View className={`flex justify-center w-[400px] h-[250px] items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2, maxWidth:400, maxHeight:300}}>
         <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayCreate}>
             <Text className="text-purple-900 text-lg m-2">Back</Text>
         </TouchableOpacity>
@@ -195,7 +224,7 @@ const CalendarListScreen = (props) => {
       </TouchableOpacity>
 
       <Overlay isVisible={editCalendarOverlay} onBackdropPress={toggleOverlayEdit}>
-        <View className={`flex justify-center w-[400px] h-[350px] items-center border-4 bg-gray-200`}>
+        <View className={`flex justify-center w-[400px] h-[350px] items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2, maxWidth:400, maxHeight:350}}>
           <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayEdit}>
               <Text className="text-purple-900 text-lg m-2">Back</Text>
           </TouchableOpacity>
@@ -301,6 +330,9 @@ const CalendarListScreen = (props) => {
 
 const UserListScreen = (props) => {
 
+  const {width, height} = useWindowDimensions();
+
+
   const navigation = useNavigation()
   const router = useRouter();
 
@@ -330,27 +362,58 @@ const UserListScreen = (props) => {
     try{
         // setUserList(calendar.users) 
         getUserEmail(currentUserEmail).then(res => setCurrentUser(res))
+    }catch(e){
+      console.log('Error',e.message)
+    }
+    setIsChanged(true)
+  },[])
+
+  useEffect(()=>{
+    try{
         getCalendar(calendar.id).then(calendar => setUserList(calendar.users))
     }catch(e){
       console.log('Error',e.message)
     }
     setIsChanged(false)
-  },[isChanged])
+  },[isChanged, currentUser])
 
-  useEffect(()=>{
-    try{
-      let tempArray = [];
-      userList.map(email => {
-        getUserEmail(email).then(user => {
-          const userObj = new User(user._id, user.email, user.username, 'PASSWORD', [], user.currentLocation)
-          tempArray.push(userObj);
-        }).catch((error) => console.error('Error fetching events:', error))
-      })
-      setUsers(prev => tempArray)
-    }catch(e){
-      console.log('Error',e.message)
-    }
-  },[userList])
+  // useEffect(()=>{
+  //   try{
+  //     let tempArray = [];
+  //     userList.map(email => {
+  //       getUserEmail(email).then(user => {
+  //         const userObj = new User(user._id, user.email, user.username, 'PASSWORD', [], user.currentLocation)
+  //         tempArray.push(userObj);
+  //       }).catch((error) => console.error('Error fetching events:', error))
+  //     })
+  //     setUsers(prev => tempArray)
+  //   }catch(e){
+  //     console.log('Error',e.message)
+  //   }
+  // },[userList])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const userPromises = userList.map(email =>
+          getUserEmail(email)
+            .then(user => new User(user._id, user.email, user.username, 'PASSWORD', [], user.currentLocation))
+            .catch((error) => {
+              console.error('Error fetching user:', error);
+              return null; // Skip errored users
+            })
+        );
+  
+        const results = await Promise.all(userPromises);
+        const validUsers = results.filter(user => user !== null);
+        setUsers(validUsers);
+      } catch (e) {
+        console.error('Error in fetchUsers:', e.message);
+      }
+    };
+  
+    fetchUsers();
+  }, [userList]);
 
   return (
     <>    
@@ -373,7 +436,7 @@ const UserListScreen = (props) => {
     </SafeAreaView>
 
     <Overlay isVisible={createCalendarOverlay} onBackdropPress={toggleOverlayCreate}>
-      <View className={`flex justify-center w-[400px] h-[300px] items-center border-4 bg-gray-200`}>
+      <View className={`flex justify-center w-[400px] h-[300px] items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2, maxWidth:400, maxHeight:300}}>
         <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayCreate}>
             <Text className="text-purple-900 text-lg m-2">Back</Text>
         </TouchableOpacity>
@@ -461,7 +524,7 @@ const UserListScreen = (props) => {
   function BackButton(props){
     return(
         <TouchableOpacity onPress={() => router.back('(tabs)/calendars/Calendars')}>
-            <View className={`absolute w-[75px] h-[40px] bg-white border-purple-900 border-2 rounded-lg bg-purple-700 items-center justify-center flex-row top-[-50] left-[25]`}>
+            <View className={`w-[75px] h-[40px] bg-white border-purple-900 border-2 rounded-lg bg-purple-700 items-center justify-center flex-row top-[-50] left-[25]`}>
                 <Image className="right-[4]" source={require('../assets/images/prevButton.png')} style={{position:'relative', width:30, height:30}}/>
                 <Text className="text-lg text-purple-900 right-[7]">Back</Text>
             </View>
@@ -496,7 +559,7 @@ const UserListScreen = (props) => {
         </TouchableOpacity>
 
         <Overlay isVisible={editCalendarOverlay} onBackdropPress={toggleOverlayEdit}>
-        <View className={`flex justify-center w-[400px] h-[300px] items-center border-4 bg-gray-200`}>
+        <View className={`flex justify-center w-[400px] h-[300px] items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2, maxWidth:400, maxHeight:300}}>
           <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayEdit}>
               <Text className="text-purple-900 text-lg m-2">Back</Text>
           </TouchableOpacity>

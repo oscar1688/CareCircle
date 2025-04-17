@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Stack } from 'expo-router'
 import LocationChecker from '../../components/LocationChecker'
@@ -141,6 +141,7 @@ const Home = () => {
       {currentUser.username == undefined ?
         <View className="w-full h-full justify-center items-center">
             <Text className ="text-lg font-bold text-purple-900">Loading...</Text>
+            <ActivityIndicator/>
         </View>:
         <Calendar user={currentUser} isUser={true}/>}
     </>

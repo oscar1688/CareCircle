@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, View, Text, TouchableOpacity, useWindowDimensions, ScrollView, Alert} from 'react-native';
+import { Image, StyleSheet, Platform, View, Text, TouchableOpacity, useWindowDimensions, ScrollView, Alert, KeyboardAvoidingView, Modal} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {Link, router} from 'expo-router';
 import {UserHeader, UsersFooter, HomeBody, UserIcon, UserInformation, TimeSheet} from './ScreenElements';
@@ -27,8 +27,7 @@ const Calendar = (props) => {
             <View className='flex-none items-center max-h-auto bg-white'>                    
                 <UserHeader calendarName = {`${props.user.username}'s Calendar`}/> 
                 <View className="relative flex flex-row w-full h-[60] border-0 items-center justify-evenly bg-opacity-100 bg-gray-200">
-                    {props.isUser ? <></>: <BackButton/>}
-                    {props.isUser ? <AddEvent user={props.user}/>:<></>}
+                    {props.isUser ? <AddEvent user={props.user}/>:<BackButton/>}
                     <TouchableOpacity onPress={decreaseWeek}>
                         <View className = "flex-row w-[50px] h-[30px] justify-center items-center">
                             <Image source={require('../assets/images/prevButton.png')} style={{position:'relative', width:40, height:40}}/>
@@ -53,10 +52,16 @@ const Calendar = (props) => {
                     <DayHeader/>  
                 </View>                               
                 <ScrollView className='w-full ' style={{height:height-335}}>   
-                    <View className='w-full overflow-hidden' style={{height:3165}}> 
-                        <HomeBody/>      
-                        <EventLayout user={props.user} isUser={props.isUser}/>
-                        <CurrentTimeLine/>
+                    <View className='relative w-full overflow-hidden' style={{height:3165}}> 
+                        <View style={{zIndex:1}}>
+                            <HomeBody/>      
+                        </View>
+                        <View style={{zIndex:2}}>
+                            <EventLayout user={props.user} isUser={props.isUser}/>
+                        </View>
+                        <View style={{zIndex:3}}>
+                            <CurrentTimeLine/>
+                        </View>
                     </View>
                 </ScrollView>                             
             </View>            
@@ -100,12 +105,21 @@ const Calendar = (props) => {
             }catch(e){
                 console.error('Error', e.message)
             }
-        }, [isChanged])          
+        }, [isChanged])  
+        
+        let compHeight = -3165
+        
+        if(Platform.OS == 'ios' || Platform.OS == 'android'){
+            compHeight = -3165
+        }
+        else{
+            compHeight = -669
+        }
 
         //props ARRAY
         return(
             <>
-                <View className='absolute flex-row border-0 w-4/5 h-full right-0 mx-2'>          
+                <View className=' flex-row border-0 w-full h-full left-[75] mx-2' style={{top:compHeight}}>          
                     <View className='border-0 border-blue-500 w-3/4 h-full right-0 '> 
                     {   
                         activeEvents.map((event) => {
@@ -183,9 +197,10 @@ const Calendar = (props) => {
                     <Image source={require('../assets/images/addButton.png')} style={{position:'relative', width:30, height:30}}/>
                     <Text className="text-purple-900 ml-2 text-lg top-[2]">Add</Text>                
                 </TouchableOpacity> 
-    
+
+                
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-                    <View className={`flex justify-center w-[400px] h-[500px] items-center border-4 bg-gray-200`}>
+                    <View className={`flex justify-center items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2, maxWidth:400, maxHeight:600}}>
                         <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlay}>
                             <Text className="text-purple-900 text-lg m-2">Back</Text>
                         </TouchableOpacity>
@@ -668,7 +683,7 @@ const Calendar = (props) => {
                 </TouchableOpacity>
     
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-                    <View className={`flex justify-center w-[400px] h-[250px] items-center border-4 bg-gray-200`}>
+                    <View className={`flex justify-center w-[400px] h-[250px] items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2, maxWidth:400, maxHeight:300}}>
                         <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlay}>
                             <Text className="text-purple-900 text-lg m-2">Back</Text>
                         </TouchableOpacity>
@@ -693,7 +708,7 @@ const Calendar = (props) => {
                     </View>
     
                     <Overlay isVisible={visibleEdit} onBackdropPress={toggleOverlayEdit}>
-                        <View className={`flex justify-center w-[400px] h-[550px] items-center border-4 bg-gray-200`}>
+                        <View className={`flex justify-center items-center border-4 bg-gray-200`} style={{width:width*5/6, height:height*1/2+10, maxWidth:400, maxHeight:600}}>
                             <TouchableOpacity className="absolute top-[0] left-[0]" onPress={toggleOverlayEdit}>
                                 <Text className="text-purple-900 text-lg m-2">Back</Text>
                             </TouchableOpacity>
@@ -838,7 +853,7 @@ const Calendar = (props) => {
                             />
 
                             <CustomButton title="Delete Event" textStyles="text-red-500" 
-                                containerStyles="bg-white border-2 bg-opacity- w-[300] border-purple-900 m-4" 
+                                containerStyles="bg-white border-2 bg-opacity- w-[full] border-purple-900 mt-4" 
                                 handlePress={async function deleteEventDB(){
                                     try{
                                         const f = form;
@@ -850,8 +865,7 @@ const Calendar = (props) => {
                                         console.log('Error', e.message)
                                     }
                                 }}/>  
-                        </View>
-                                                
+                        </View>                                                
                         </View>
                     </Overlay>
                 </Overlay>
@@ -911,9 +925,9 @@ const Calendar = (props) => {
                 throw new Error("Time inputs must be a number")
             }
 
-            if(sY != eY || sM != eM || sD != eD){
-                throw new Error("Only same day events are supported at this time")
-            }  
+            // if(sY != eY || sM != eM || sD != eD){
+            //     throw new Error("Only same day events are supported at this time")
+            // }  
         
             if(sH > eH || (sH == eH && sm >= em)){
                 throw new Error("Start time must be before end time")
@@ -946,10 +960,12 @@ const Calendar = (props) => {
     
     function CurrentTimeLine(){
         const [currentTime, setCurrentTime] = useState(new Date());
+        
     
         let timeString = convertTimetoString(currentTime.getHours(),currentTime.getMinutes())
         let anWidth = '100%'
         let compHeight = 128
+        let compHeight2 = -3165*2
     
         function convertTimetoString(hours,minutes){
             let h = hours
@@ -975,6 +991,7 @@ const Calendar = (props) => {
         }
     
         if(Platform.OS == 'ios' || Platform.OS == 'android'){
+            compHeight2 = -3165*2
             compHeight = 124.75
             anWidth = '78%'        
         }
@@ -982,6 +999,7 @@ const Calendar = (props) => {
         //     //580
         // }
         else{
+            compHeight2 = -669
             compHeight = 128
             anWidth = '90%'
         }
@@ -989,7 +1007,7 @@ const Calendar = (props) => {
         return(
             <>
                 <View className="absolute flex-row-reverse border-0 w-full items-center border-purple-300" 
-                    style={{top:33+compHeight*currentTime.getHours()+(compHeight*(currentTime.getMinutes()))/60}}>
+                    style={{top:(33+compHeight*currentTime.getHours()+(compHeight*(currentTime.getMinutes()))/60)+compHeight2}}>
                     <View className="h-[5px] bg-purple-800" style={{width:anWidth}}/>
                     <View className="h-[35px] w-[90px] bg-purple-800 rounded-full justify-center items-center">
                         <Text className='text-white text-xl'>{timeString}</Text>
@@ -1001,6 +1019,7 @@ const Calendar = (props) => {
 }
     //top:33+compHeight*currentTime.getHours()+(compHeight*(currentTime.getMinutes()))/60
 
+    // style={{top:(33+compHeight*currentTime.getHours()+(compHeight*(currentTime.getMinutes()))/60)+compHeight2}}>
 
 
 export default Calendar
