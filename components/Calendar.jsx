@@ -603,82 +603,96 @@ const Calendar = (props) => {
     
     function Event(props){
     
-        const event = props.event
-    
+        const event = props.event;
         const [visible, setVisible] = useState(false);
         const [visibleEdit, setVisibleEdit] = useState(false);
-    
+
         const toggleOverlay = () => {
             setVisible(!visible);
-        }
-    
+        };
+
         const toggleOverlayEdit = () => {
             setVisibleEdit(!visibleEdit);
-        }
-    
-        let compHeight = 124.75
-    
-        if(Platform.OS == 'ios' || Platform.OS == 'android'){
-            compHeight = 124.75
-        }
-        else{
-            compHeight = 128
-        }
-    
-        const [form, setForm] = useState({})
-    
-        useEffect(()=>{
+        };
+
+        let compHeight = Platform.OS === 'ios' || Platform.OS === 'android' ? 124.75 : 128;
+
+        const [form, setForm] = useState({});
+
+        useEffect(() => {
             setForm(prev => ({
                 ...prev,
                 id: event.id,
                 email: event.email,
                 name: event.title,
-                startY: event.start[0]+'',
-                startM: event.start[1]+'',
-                startD: event.start[2]+'',
-                startH: event.start[3]+'',
-                startm: event.start[4]+'',
-                endY: event.end[0]+'',
-                endM: event.end[1]+'',
-                endD: event.end[2]+'',
-                endH: event.end[3]+'',
-                endm: event.end[4]+'',
+                startY: event.start[0] + '',
+                startM: event.start[1] + '',
+                startD: event.start[2] + '',
+                startH: event.start[3] + '',
+                startm: event.start[4] + '',
+                endY: event.end[0] + '',
+                endM: event.end[1] + '',
+                endD: event.end[2] + '',
+                endH: event.end[3] + '',
+                endm: event.end[4] + '',
                 location: event.location,
                 description: event.description,
-            }))
-        },[visibleEdit])
-    
-        let isUser = props.isUser
+            }));
+        }, [visibleEdit]);
+
+        let isUser = props.isUser;
     
         return(
             <>
-                <TouchableOpacity onPress={toggleOverlay}>
-                    <View className={`absolute w-full mr-1 rounded-md opacity-90 border-4 border-purple-900 overflow-hidden bg-purple-400`}
-                        style={{height:compHeight*props.duration, top:50+compHeight*props.startTime}}>
-                        <View className=''>
-                            <View className="flex-row border-0 my-2 items-center top-[5]"> 
-                                <Text className="text-white text-2xl top-[-5] truncate mx-2 mt-2">
-                                    {props.event.title}
-                                </Text> 
-                                 {props.event.location ? 
-                                    <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} 
-                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[1]}}/>}</> :
-                                    <></>
-                                 }
-                            </View>                            
-                            <Text className="text-white text-md truncate mx-2">
-                                {convertTimeArraytoString(props.event.start, props.event.end)}
+                <TouchableOpacity
+                onPress={toggleOverlay}
+                onPressIn={() => console.log('Event Pressed')}
+                activeOpacity={0.8}
+                style={{
+                    position: 'absolute',
+                    top: 50 + compHeight * props.startTime,
+                    height: compHeight * props.duration,
+                    width: '100%',
+                    zIndex: 10, // ensure it's on top
+                    elevation: 5, // Android elevation
+                }}
+                >
+                    <View
+                        className={`w-full mr-1 rounded-md opacity-90 border-4 border-purple-900 overflow-hidden bg-purple-400`}
+                        pointerEvents="box-none"
+                    >
+                        <View className="flex-row border-0 my-2 items-center top-[5]">
+                            <Text className="text-white text-2xl top-[-5] truncate mx-2 mt-2">
+                                {props.event.title}
                             </Text>
-                            <Text className="text-white text-md truncate mx-2">
-                                {props.event.email}
-                            </Text>
-                            <Text className="text-blue-700 text-md truncate mx-2">
-                                {props.event.location}
-                            </Text>
-                            <Text className="text-gray-700 text-sm truncate mx-2">
-                                {props.event.description}
-                            </Text>
-                        </View>                
+                            {props.event.location ? (
+                                <>
+                                    {props.isUser ? (
+                                        <LocationChecker address={props.event.location} />
+                                    ) : (
+                                        <LocationCoord
+                                            address={props.event.location}
+                                            coordinates={{
+                                                latitude: props.user.currentLocation[0],
+                                                longitude: props.user.currentLocation[1],
+                                            }}
+                                        />
+                                    )}
+                                </>
+                            ) : null}
+                        </View>
+                        <Text className="text-white text-md truncate mx-2">
+                            {convertTimeArraytoString(props.event.start, props.event.end)}
+                        </Text>
+                        <Text className="text-white text-md truncate mx-2">
+                            {props.event.email}
+                        </Text>
+                        <Text className="text-blue-700 text-md truncate mx-2">
+                            {props.event.location}
+                        </Text>
+                        <Text className="text-gray-700 text-sm truncate mx-2">
+                            {props.event.description}
+                        </Text>
                     </View>
                 </TouchableOpacity>
     

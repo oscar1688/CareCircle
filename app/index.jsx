@@ -32,7 +32,7 @@ export default function Index() {
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 p-5 justify-center items-center relative">
         {/* Top curved shapes */}
-        <View className="absolute top-0 left-0 w-[200px] h-[200px] bg-carecircle-purple-light rounded-br-full" />
+        <View className="absolute top-0 left-0 w-[75px] h-[75px] bg-carecircle-purple-light rounded-br-full" />
         <View className="absolute top-0 right-0 w-[100px] h-[100px] bg-carecircle-purple-dark rounded-bl-full" />
 
         {/* Logo */}
@@ -69,7 +69,7 @@ export default function Index() {
         /> */}
 
         {/* Bottom curved shapes */}
-        <View className="absolute bottom-0 right-0 w-[200px] h-[200px] bg-carecircle-purple-light rounded-tl-full" />
+        <View className="absolute bottom-0 right-0 w-[75px] h-[75px] bg-carecircle-purple-light rounded-tl-full" />
         <View className="absolute bottom-0 left-0 w-[100px] h-[100px] bg-carecircle-purple-dark rounded-tr-full" />
       </View>
     </SafeAreaView>

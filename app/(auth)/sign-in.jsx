@@ -114,8 +114,8 @@ const SignIn = () => {
       </ScrollView>
 
       {/* Bottom curved shapes */}
-      <View className="absolute bottom-0 right-0 w-[130px] h-[130px] bg-carecircle-purple-light rounded-tl-full" />
-      <View className="absolute bottom-0 left-0 w-[100px] h-[100px] bg-carecircle-purple-dark rounded-tr-full" />
+      {/* <View className="absolute bottom-0 right-0 w-[130px] h-[130px] bg-carecircle-purple-light rounded-tl-full" />
+      <View className="absolute bottom-0 left-0 w-[100px] h-[100px] bg-carecircle-purple-dark rounded-tr-full" /> */}
     </SafeAreaView>
   )
 };

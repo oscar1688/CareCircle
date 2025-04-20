@@ -25,7 +25,12 @@ const FormField = ({
 
         <View className="w-full h-12 px-4 bg-white rounded-2xl border-2 border-carecircle-purple-light focus:border-secondary flex flex-row items-center">
           <TextInput
-            className="flex-1 w-full text-black font-psemibold text-base"
+            className="flex-1 w-full text-black font-psemibold text-base pt-[2px]"
+            style={{
+              textAlignVertical: 'center', // ensures vertical centering on Android
+              paddingTop: 10,                // small nudge down if needed
+              includeFontPadding: false,   // removes extra space on Android
+            }}
             keyboardType={keyboardType}
             value={value}
             placeholder={placeholder}

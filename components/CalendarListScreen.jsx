@@ -442,66 +442,70 @@ const UserListScreen = (props) => {
         </TouchableOpacity>
             <Text className="absolute top-[10] text-lg font-bold text-purple-900">Add User</Text>
         <TouchableOpacity className="absolute top-[0] right-[0]">
-                <Text className="text-purple-900 text-lg m-2" onPress={async () =>{
-                  let existError = false
-                  let addError = false
-                  let tempArray = form.newUsers.split(",")
-                    tempArray = [... new Set(tempArray)]
-                  try{
+                <Text
+                  className="text-purple-900 text-lg m-2"
+                  onPress={async () => {
+                    let existError = false;
+                    let addError = false;
+                    let tempArray = form.newUsers.split(",");
+                    tempArray = [...new Set(tempArray)];
 
-                    const sub = await getCalendar(calendar.id);
-                      console.log(sub)
-                    const emailResults = await Promise.all(tempArray.map(async item =>{
-                      const user = await getUserEmail(item);
-                      if(user){
-                        if(sub.users.indexOf(user.email) == -1){
-                          console.log("exists",user.email)
-                          return user.email
-                        }else{
-                          console.log("user already in calendar")
-                          addError = true
-                          return null
-                        }                        
-                      }else{
-                        console.log("no exists")
-                        existError = true
-                        return null
+                    try {
+                      const sub = await getCalendar(calendar.id);
+                      const emailResults = await Promise.all(
+                        tempArray.map(async (item) => {
+                          const user = await getUserEmail(item);
+                          if (user) {
+                            if (!sub.users.includes(user.email)) {
+                              return user.email;
+                            } else {
+                              addError = true;
+                              return null;
+                            }
+                          } else {
+                            existError = true;
+                            return null;
+                          }
+                        })
+                      );
+
+                      const filteredArray = emailResults.filter((email) => email != null);
+
+                      if (filteredArray.length > 0) {
+                        await editCalendar({
+                          id: sub._id,
+                          users: [...sub.users, ...filteredArray],
+                        });
+
+                        // ✅ Immediately re-fetch and update userList
+                        const updated = await getCalendar(sub._id);
+                        setUserList(updated.users);
+
+                        setForm({
+                          newUsers: '',
+                          currentUsers: [...updated.users],
+                        });
+
+                        setIsChanged(true);
                       }
-                    }))
 
-                    const filteredArray = emailResults.filter(email => email != null)
+                      if (existError && addError) {
+                        throw new Error("Some users don't exist and others are already in the calendar");
+                      } else if (existError) {
+                        throw new Error("Some users don't exist");
+                      } else if (addError) {
+                        throw new Error("Some users are already in the calendar");
+                      }
 
-                    if(filteredArray.length > 0){
-                      getCalendar(calendar.id).then(res => editCalendar({
-                        id: res._id,
-                        users: [...res.users, ...filteredArray]
-                      })).then(
-                        getCalendar(calendar.id).then(res => {return res.users}).then(res => setForm({
-                          newUsers:'',
-                          currentUsers: [...res]
-                      })))
-                    }else{
-
+                      toggleOverlayCreate(); // Close overlay after success
+                    } catch (e) {
+                      console.log("Error", e.message);
+                      Alert.alert("Error", e.message);
                     }
-
-                    if(existError == true && addError == true){
-                      throw new Error("users dont exist and already in calendar")
-                    }else if(existError == true){
-                      throw new Error("users dont exist")
-                    }else if(addError == true){
-                      throw new Error("users already in calendar")
-                    }
-
-                    console.log(tempArray, filteredArray, emailResults)
-
-                    setIsChanged(true)
-                    
-                  }catch(e){
-                    console.log("Error", e.message)
-                    Alert.alert("Error", e.message)
-                  }    
-                  toggleOverlayCreate()
-                  }}>Add</Text>
+                  }}
+                >
+                  Add
+                </Text>
         </TouchableOpacity>
         <View className="absolute flex items-center border-0 h-5/6 justify-center w-full">
           <Text className="text-base text-red-500 font-pmedium ">Seperate emails by comma " , "</Text>
@@ -521,15 +525,27 @@ const UserListScreen = (props) => {
 
   
 
-  function BackButton(props){
-    return(
-        <TouchableOpacity onPress={() => router.back('(tabs)/calendars/Calendars')}>
-            <View className={`w-[75px] h-[40px] bg-white border-purple-900 border-2 rounded-lg bg-purple-700 items-center justify-center flex-row top-[-50] left-[25]`}>
-                <Image className="right-[4]" source={require('../assets/images/prevButton.png')} style={{position:'relative', width:30, height:30}}/>
-                <Text className="text-lg text-purple-900 right-[7]">Back</Text>
-            </View>
-        </TouchableOpacity>    
-    )
+  function BackButton() {
+    return (
+      <View
+        pointerEvents="box-none"
+        style={{ position: 'absolute', top: 50, left: 25, zIndex: 50 }}
+      >
+        <TouchableOpacity
+          onPress={() => router.back()}
+          onPressIn={() => console.log("Back button pressed")}
+          activeOpacity={0.8}
+          className="flex-row items-center bg-white border-2 border-purple-900 rounded-lg px-3 py-1"
+        >
+          <Image
+            source={require('../assets/images/prevButton.png')}
+            style={{ width: 30, height: 30 }}
+            className="mr-2"
+          />
+          <Text className="text-lg text-purple-900">Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   function UserListObject(props){
