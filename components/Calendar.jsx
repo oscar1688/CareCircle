@@ -658,42 +658,48 @@ const Calendar = (props) => {
                 }}
                 >
                     <View
-                        className={`w-full mr-1 rounded-md opacity-90 border-4 border-purple-900 overflow-hidden bg-purple-400`}
+                        className={`w-full h-full mr-1 rounded-md opacity-90 border-4 border-purple-900 overflow-hidden bg-purple-400`}
                         pointerEvents="box-none"
                     >
-                        <View className="flex-row border-0 my-2 items-center top-[5]">
-                            <Text className="text-white text-2xl top-[-5] truncate mx-2 mt-2">
-                                {props.event.title}
-                            </Text>
-                            {props.event.location ? (
-                                <>
-                                    {props.isUser ? (
-                                        <LocationChecker address={props.event.location} />
-                                    ) : (
-                                        <LocationCoord
-                                            address={props.event.location}
-                                            coordinates={{
-                                                latitude: props.user.currentLocation[0],
-                                                longitude: props.user.currentLocation[1],
-                                            }}
-                                        />
-                                    )}
-                                </>
-                            ) : null}
-                        </View>
-                        <Text className="text-white text-md truncate mx-2">
-                            {convertTimeArraytoString(props.event.start, props.event.end)}
+                        <Text className="text-white text-2xl ml-4 mt-2 truncate">
+                            {props.event.title}
                         </Text>
-                        <Text className="text-white text-md truncate mx-2">
-                            {props.event.email}
-                        </Text>
-                        <Text className="text-blue-700 text-md truncate mx-2">
-                            {props.event.location}
-                        </Text>
-                        <Text className="text-gray-700 text-sm truncate mx-2">
-                            {props.event.description}
-                        </Text>
+
+                        {props.event.location && (
+                            <View className="ml-4 mt-1">
+                                {props.isUser ? (
+                                    <LocationChecker address={props.event.location} />
+                                ) : (
+                                    <LocationCoord
+                                        address={props.event.location}
+                                        coordinates={{
+                                            latitude: props.user.currentLocation[0],
+                                            longitude: props.user.currentLocation[1],
+                                        }}
+                                    />
+                                )}
+                            </View>
+                        )}
+
+                        {/* Render rest of info only if there's enough vertical space */}
+                        {props.duration >= 0.1 && (
+                            <>
+                                <Text className="text-white text-md truncate mx-2">
+                                    {convertTimeArraytoString(props.event.start, props.event.end)}
+                                </Text>
+                                <Text className="text-white text-md truncate mx-2">
+                                    {props.event.email}
+                                </Text>
+                                <Text className="text-blue-700 text-md truncate mx-2">
+                                    {props.event.location}
+                                </Text>
+                                <Text className="text-gray-700 text-sm truncate mx-2">
+                                    {props.event.description}
+                                </Text>
+                            </>
+                        )}
                     </View>
+
                 </TouchableOpacity>
     
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
@@ -709,12 +715,22 @@ const Calendar = (props) => {
                         <View className="absolute flex border-0 h-5/6 justify-center w-full ">
                             <View className="flex-row border-0 my-2 items-center top-[5]"> 
                                 <Text className="text-xl font-bold mx-4 text-black">{props.event.title}</Text> 
-                                {props.event.location ? 
-                                    <>{props.isUser? <LocationChecker address={props.event.location}/> : <LocationCoord address={props.event.location} 
-                                        coordinates={{ latitude: props.user.currentLocation[0], longitude:  props.user.currentLocation[1]}}/>}</> :
-                                    <></>
-                                 }
-                            </View>    
+                            </View>
+                            {props.event.location && (
+                            <View className="ml-4 mt-1">
+                                {props.isUser ? (
+                                    <LocationChecker address={props.event.location} />
+                                ) : (
+                                    <LocationCoord
+                                        address={props.event.location}
+                                        coordinates={{
+                                            latitude: props.user.currentLocation[0],
+                                            longitude: props.user.currentLocation[1],
+                                        }}
+                                    />
+                                )}
+                            </View>
+                            )}
                            <Text className="text-sm mx-4 text-black">{convertTimeArraytoString(props.event.start,props.event.end)}</Text> 
                            <Text className="text-lg mx-4 text-blue-700">{props.event.location}</Text>
                            <Text className="text-sm mx-4 text-black">{props.event.description}</Text>

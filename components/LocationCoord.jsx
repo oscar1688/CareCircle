@@ -64,7 +64,7 @@ const LocationCoord = ({address, coordinates, radius = DEFAULT_RADIUS }) => {
         <Text className="text-red-500 text-xs">{errorMsg}</Text>
       ) : (
         <>
-          <Text className="text-white text-xs">{isInsideRadius ? 'Near Location' : 'Away From Location'}</Text>
+          <Text className="text-purple-900 text-s">{isInsideRadius ? 'Near Location' : 'Away From Location'}</Text>
           <Circle isInsideRadius={isInsideRadius} />
         </>
       )}
