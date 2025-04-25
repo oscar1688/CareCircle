@@ -1,54 +1,69 @@
-📅 CareCircle
+# 📅 CareCircle
 CareCircle is a calendar-sharing mobile application designed for families and friend groups.
 It allows users to create shared calendars, manage events together, and monitor real-time location updates to check if members are following their planned schedules.
 
-✨ Features
+# ✨ Features
 📆 Shared Calendars: Create, edit, and manage calendars shared among selected users.
+
 🗓️ Event Sharing: Invite friends and family to events, with real-time updates.
+
 📍 Location Check-Ins: See if users are where they’re supposed to be based on their event schedule.
+
 🔔 Real-Time Updates: Instantly get updates if users change locations or event statuses.
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 Frontend: React Native (Expo)
 Backend: Appwrite (Authentication), MongoDB (database)
 Maps/Location: Google Maps API
 Authentication: Appwrite
 
-🚀 Installation
-# 1. Clone the repository
+# 🚀 Installation
+## 1. Clone the repository
 git clone https://github.com/oscar1688/CareCircle.git
 cd CareCircle
-# 2. Install dependencies
+## 2. Install dependencies
 npm install
-# 3. Start the development server
+## 3. Start the development server
 npx expo start
 
-📱 Usage
+# 📱 Usage
 Open the app and sign up or log in.
 Create a shared calendar or join an existing one.
 Add events with times and optional location data.
 Enable location permissions to allow real-time schedule tracking.
 Monitor your group’s compliance with the event schedule through the calendars view by selecting the user you want to view.
 
-🤝 Contributers
+# 🤝 Contributers
 Oscar - Figma App Design, FrontEnd:Landing Page, Auth Screens, Profile Screen, Backend: Auth, Location, Testing & Debugging
+
 Anthony - Figma App Design, FrontEnd: Home Page, Calendars Screen, Backend: Database, Testing & Debugging
+
 Jeffery - Figma App Design, FrontEnd: Settings Screen, Profile Screen, Backend: Database, Documentation
+
 Jumman - Figma App Design, FrontEnd: Profile Screen, assisted Anthony with creation of Calendar Screen, Documentation
 
-📦 Packages & API
+# 📦 Packages & API
 expo – (Core Expo SDK – everything runs on this)
+
 react – (Core React library)
+
 react-native – (Core React Native library)
+
 expo-router – (Routing/navigation for your app)
+
 expo-location – (Expo API for location services)
+
 axios – (HTTP client for making API calls)
+
 geolib – (Helps with distance and geospatial calculations)
+
 nativewind – (Use Tailwind CSS style classes inside React Native)
+
 tailwindcss – (Tailwind CSS core dependency for NativeWind)
+
 react-native-appwrite – (Connects your app to Appwrite backend for authentication, database, etc.)
 
-📚 User Guide
+# 📚 User Guide
 To install the the APK file follow the following steps:
 1. Access the APK file from the download link above on your android device and click on download.
 2. After downloading the APK file, simply clicking on the download popup from the web browser or clicking on the APK file from your downloads folder and android will prompt you regarding how you want to open the file.
